@@ -1,0 +1,19 @@
+{
+  "name": "eagle1-dashboard",
+  "version": "1.0.0",
+  "description": "Eagle I — Family Office Investment Dashboard",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.x"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0"
+  }
+}

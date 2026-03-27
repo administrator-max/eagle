@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eagle I — Family Office Investment Dashboard</title>
+
+<!-- ── ANTI-CRAWL META TAGS ── -->
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="bingbot" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+
+<!-- ── PREVENT CACHING (hides content from caches) ── -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, private">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
+<!-- ── OPEN GRAPH: block social preview scrapers ── -->
+<meta property="og:title" content="">
+<meta property="og:description" content="">
+<meta property="og:image" content="">
+
+<!-- ── FONTS ── -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+
+<!-- ── STYLES ── -->
+<link rel="stylesheet" href="static/css/styles.css">
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<div class="sticky-top">
+<header class="header">
+  <div class="header-brand">
+    <div class="header-wordmark">Eagle I</div>
+    <div class="header-sub">Family Office · Investment Dashboard</div>
+  </div>
+  <nav class="header-nav">
+    <button class="nav-btn active" onclick="showSection('overview')">Overview</button>
+    <button class="nav-btn" onclick="showSection('portfolio')">Portfolio</button>
+    <button class="nav-btn" onclick="showSection('commitments')">Commitments</button>
+    <button class="nav-btn" onclick="showSection('return')">Return</button>
+    <button class="nav-btn" onclick="showSection('liquidity')">Liquidity</button>
+    <button class="nav-btn" onclick="showSection('realestate')">Real Estate</button>
+  </nav>
+  <div class="header-meta">
+    <select id="periodSelect" onchange="setPeriod(this.value)"
+      style="font-family:'DM Mono',monospace;font-size:10px;font-weight:600;
+             color:#ffffff;background:transparent;border:none;
+             letter-spacing:0.06em;cursor:pointer;outline:none;
+             -webkit-appearance:none;appearance:none;
+             padding-right:14px;
+             background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%226%22><path d=%22M0 0l5 6 5-6z%22 fill=%22%23ffffff%22/></svg>');
+             background-repeat:no-repeat;background-position:right 0 center;">
+      <option value="2026-02">As of February 2026</option>
+      <option value="2026-01">As of January 2026</option>
+    </select>
+    <div class="status-dot"></div>
+  </div>
+</header>
+
+<!-- ── ENTITY FILTER BAR ── -->
+<div class="entity-bar">
+  <span class="entity-bar-label">View by</span>
+  <button class="entity-pill all active" onclick="setEntity('ALL', this)">
+    All Entities
+  </button>
+  <div class="entity-bar-sep"></div>
+  <button class="entity-pill ent-5e" onclick="setEntity('5E', this)">
+    <span class="pill-dot" style="background:#1F3864"></span>5E
+  </button>
+  <button class="entity-pill ent-ath" onclick="setEntity('ATH', this)">
+    <span class="pill-dot" style="background:#b89a5a"></span>ATH
+  </button>
+  <button class="entity-pill ent-lpe" onclick="setEntity('LPE', this)">
+    <span class="pill-dot" style="background:#2d7a5f"></span>LPE
+  </button>
+  <button class="entity-pill ent-kil" onclick="setEntity('KIL', this)">
+    <span class="pill-dot" style="background:#783c28"></span>KIL
+  </button>
+</div>
+
+<!-- ── ENTITY CONTEXT BANNER ── -->
+<div class="entity-banner" id="entityBanner">
+  <div class="eb-name" id="ebName"></div>
+  <div class="eb-kpis" id="ebKpis"></div>
+</div>
+</div>
+
+
+<main class="main">
+
+<!-- ══════════════════════════════════════════
+     SECTION 1 — OVERVIEW
+════════════════════════════════════════════ -->
+<section class="section active" id="section-overview">
+
+  <div class="page-header">
+    <h1 class="page-title">Portfolio <em>Overview</em></h1>
+  </div>
+
+  <!-- KPI STRIP ROW 1: AUM · NAV · Cash · Free Cash · Due Amount -->
+  <div class="kpi-strip">
+    <div class="kpi-card gold" id="kpiAUM">
+      <div class="kpi-label navy">Total Assets Under Management</div>
+      <div class="kpi-value"><span class="currency">$</span>56.5M</div>
+      <div class="kpi-sub">Cash $6.0M &nbsp;·&nbsp; Portfolios $50.9M</div>
+      <div class="kpi-corner">AUM</div>
+    </div>
+    <div class="kpi-card blue" id="kpiNAV">
+      <div class="kpi-label navy">Total NAV</div>
+      <div class="kpi-value"><span class="currency">$</span>50.4M</div>
+      <div class="kpi-sub"><span class="up">↑ $7.02M</span> unrealised gain vs principal</div>
+      <div class="kpi-corner">NAV</div>
+    </div>
+    <div class="kpi-card ink" id="kpiCash">
+      <div class="kpi-label">Total Cash/FD</div>
+      <div class="kpi-value"><span class="currency">$</span>6.0M</div>
+      <div class="kpi-sub">Across BOS · DBS · Barclays</div>
+      <div class="kpi-corner">CASH</div>
+    </div>
+    <div class="kpi-card green" id="kpiFC">
+      <div class="kpi-label">Consolidated Free Cash</div>
+      <div class="kpi-value"><span class="currency">$</span>6.5M</div>
+      <div class="kpi-sub">After unfunded commitments &amp; expenses</div>
+      <div class="kpi-corner">LIQUIDITY</div>
+    </div>
+    <div class="kpi-card ink" id="kpiDue">
+      <div class="kpi-label orange">Due Amount</div>
+      <div class="kpi-value"><span style="font-family:'DM Mono';font-size:22px;color:var(--ink-muted)">—</span></div>
+      <div class="kpi-sub">Pending confirmation</div>
+      <div class="kpi-corner">DUE</div>
+    </div>
+  </div>
+
+  <!-- KPI STRIP ROW 2: Monthly Yield · YTD Yield · Monthly Return · YTD Return · All Time Return -->
+  <div class="kpi-strip" style="margin-top:16px">
+    <div class="kpi-card blue" id="kpiMthYield">
+      <div class="kpi-label" style="color:#2a4a7f">Monthly Yield</div>
+      <div class="kpi-value"><span style="font-family:'DM Mono';font-size:22px;color:var(--ink-muted)">—</span></div>
+      <div class="kpi-sub">Pending formulation</div>
+      <div class="kpi-corner">MTD YLD</div>
+    </div>
+    <div class="kpi-card blue" id="kpiYtdYield">
+      <div class="kpi-label" style="color:#2a4a7f">YTD Yield</div>
+      <div class="kpi-value"><span style="font-family:'DM Mono';font-size:22px;color:var(--ink-muted)">—</span></div>
+      <div class="kpi-sub">Pending formulation</div>
+      <div class="kpi-corner">YTD YLD</div>
+    </div>
+    <div class="kpi-card blue" id="kpiMTD">
+      <div class="kpi-label green">Monthly Return</div>
+      <div class="kpi-value"><span style="font-family:'DM Mono';font-size:22px;color:var(--ink-muted)">—</span></div>
+      <div class="kpi-sub">Pending formulation</div>
+      <div class="kpi-corner">MTD</div>
+    </div>
+    <div class="kpi-card blue" id="kpiYTD">
+      <div class="kpi-label green">YTD Return</div>
+      <div class="kpi-value"><span style="font-family:'DM Mono';font-size:22px;color:var(--ink-muted)">—</span></div>
+      <div class="kpi-sub">Pending formulation</div>
+      <div class="kpi-corner">YTD</div>
+    </div>
+    <div class="kpi-card green" id="kpiAllTime">
+      <div class="kpi-label green">All Time Return</div>
+      <div class="kpi-value"><span style="font-family:'DM Mono';font-size:22px;color:var(--ink-muted)">—</span></div>
+      <div class="kpi-sub">Pending formulation</div>
+      <div class="kpi-corner">ALL TIME</div>
+    </div>
+  </div>
+
+  <!-- ENTITY SUMMARY NEW + NAV PIE -->
+  <div class="grid-65-35">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title" style="width:100%;text-align:center">Entity Summary</span>
+      </div>
+      <div class="card-body" style="padding:0">
+        <table class="entity-table" id="entitySummaryTable">
+          <thead>
+            <tr>
+              <th>Entity</th>
+              <th style="text-align:right">Cash/FD</th>
+              <th style="text-align:right">Short Term</th>
+              <th style="text-align:right">Long Term</th>
+              <th style="text-align:right">Real Estate</th>
+              <th style="text-align:right">Total AUM</th>
+              <th style="text-align:right">%</th>
+            </tr>
+          </thead>
+          <tbody id="entitySummaryBody"></tbody>
+          <tfoot id="entitySummaryFoot"></tfoot>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">NAV Allocation</span>
+        <span class="card-tag">by Entity</span>
+      </div>
+      <div class="card-body" style="display:flex;flex-direction:column;align-items:center;gap:20px">
+        <canvas id="entityPie" width="180" height="180"></canvas>
+        <div class="legend" id="entityPieLegend">
+          <div class="legend-item"><div class="legend-dot" style="background:#1F3864"></div>5E Capital<span class="legend-pct">43.6%</span></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#b89a5a"></div>Athena (ATH)<span class="legend-pct">16.1%</span></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#2d7a5f"></div>LPE<span class="legend-pct">34.1%</span></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#783c28"></div>KIL Real Estate<span class="legend-pct">6.2%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DUAL-RING ASSET CLASS CHART -->
+  <div class="card" style="margin-top:20px">
+    <div class="card-header">
+      <span class="card-title">Asset Class &amp; Term Allocation</span>
+      <span class="card-tag">% of total NAV · outer ring = asset class · inner ring = investment horizon</span>
+    </div>
+    <div class="card-body" style="display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap;padding:24px 32px">
+      <!-- Left: Inner legend -->
+      <div style="min-width:160px;text-align:right">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.12em;color:var(--ink-muted);text-transform:uppercase;margin-bottom:10px">Inner — Investment Horizon</div>
+        <div class="legend" id="horizonLegend" style="align-items:flex-end"></div>
+      </div>
+      <!-- Centre: chart -->
+      <div style="position:relative;width:260px;height:260px;flex-shrink:0">
+        <canvas id="assetPie"    width="260" height="260" style="position:absolute;top:0;left:0"></canvas>
+        <canvas id="horizonPie"  width="260" height="260" style="position:absolute;top:0;left:0"></canvas>
+      </div>
+      <!-- Right: Outer legend -->
+      <div style="min-width:160px">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.12em;color:var(--ink-muted);text-transform:uppercase;margin-bottom:10px">Outer — Asset Class</div>
+        <div class="legend" id="assetClassLegend"></div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECTION 2 — PORTFOLIO
+════════════════════════════════════════════ -->
+<section class="section" id="section-portfolio">
+
+  <div class="page-header">
+    <h1 class="page-title">Portfolio <em>Performance</em></h1>
+  </div>
+
+  <div class="mini-strip">
+    <div class="mini-stat">
+      <div class="mini-stat-label">Total Investments</div>
+      <div class="mini-stat-val" id="miniStatCount">26</div>
+    </div>
+    <div class="mini-stat">
+      <div class="mini-stat-label">Portfolio MOIC</div>
+      <div class="mini-stat-val" id="miniStatMoic">1.13×</div>
+    </div>
+    <div class="mini-stat">
+      <div class="mini-stat-label">Unrealised Gain</div>
+      <div class="mini-stat-val" id="miniStatGL" style="color:var(--green)">+$7.02M</div>
+    </div>
+    <div class="mini-stat">
+      <div class="mini-stat-label">Unfunded Commitments</div>
+      <div class="mini-stat-val" id="miniStatUnf" style="color:var(--red)">$24.28M</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header" style="justify-content:space-between;align-items:center">
+      <span class="card-title" id="portCardTitle">Investment Portfolio Detail</span>
+      <div style="display:flex;gap:6px">
+        <button id="portPillAll"    onclick="setPortView('all')"
+          style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;
+            padding:5px 14px;border-radius:2px;border:1px solid var(--ink);background:var(--ink);
+            color:#fff;cursor:pointer;transition:all 0.2s">All</button>
+        <button id="portPillShort"  onclick="setPortView('short')"
+          style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;
+            padding:5px 14px;border-radius:2px;border:1px solid var(--border);background:transparent;
+            color:var(--ink-muted);cursor:pointer;transition:all 0.2s">Short</button>
+        <button id="portPillLong"   onclick="setPortView('long')"
+          style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;
+            padding:5px 14px;border-radius:2px;border:1px solid var(--border);background:transparent;
+            color:var(--ink-muted);cursor:pointer;transition:all 0.2s">Long</button>
+        <button id="portPillGgrp"   onclick="setPortView('ggrp')"
+          style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;
+            padding:5px 14px;border-radius:2px;border:1px solid var(--border);background:transparent;
+            color:var(--ink-muted);cursor:pointer;transition:all 0.2s">GGRP</button>
+        <button id="portPillEstate" onclick="setPortView('estate')"
+          style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;
+            padding:5px 14px;border-radius:2px;border:1px solid var(--border);background:transparent;
+            color:var(--ink-muted);cursor:pointer;transition:all 0.2s">Estate</button>
+      </div>
+    </div>
+    <div class="card-body" style="padding:0">
+      <div class="table-scroll">
+        <table class="port-table">
+          <thead>
+            <tr>
+              <th>Entity</th>
+              <th>Investment</th>
+              <th>Vintage</th>
+              <th>Strategy</th>
+              <th style="text-align:right">Principal</th>
+              <th style="text-align:right">NAV</th>
+              <th style="text-align:right">% NAV</th>
+              <th style="text-align:right">Unreal. G/L</th>
+              <th style="text-align:right">Ann. Yield</th>
+              <th style="text-align:right">Ann. Return</th>
+              <th style="text-align:right">IRR</th>
+              <th style="text-align:right">DPI</th>
+              <th style="text-align:center">MOIC</th>
+              <th style="text-align:right">Unfunded</th>
+            </tr>
+          </thead>
+          <tbody id="portfolioTbody"></tbody>
+          <tfoot>
+            <tr id="portFootRow">
+              <td colspan="4">Total Portfolio</td>
+              <td id="portFootPrin">$43,838,084</td>
+              <td id="portFootNav">$50,854,478</td>
+              <td style="text-align:right">100.0%</td>
+              <td id="portFootGL" class="up">+$7,109,658</td>
+              <td id="portFootYld" style="text-align:right">—</td>
+              <td id="portFootAnn" style="text-align:right">—</td>
+              <td id="portFootIrr" style="text-align:right">—</td>
+              <td id="portFootDpi" style="text-align:right">—</td>
+              <td id="portFootMoic" style="text-align:center">1.20×</td>
+              <td id="portFootUnf" style="color:var(--red);text-align:right">$24,278,790</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <div style="margin-top:32px;padding:28px 32px;background:var(--cream);border:1px solid var(--border-lt);border-radius:4px">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--ink);letter-spacing:0.05em;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border)">Glossary</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px 40px">
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.12em;color:var(--gold);text-transform:uppercase;margin-bottom:6px">Ann. Yield</div>
+            <div style="font-size:11.5px;color:var(--ink-muted);line-height:1.7">The annualised income yield of a position, representing periodic cash distributions as a proportion of current NAV. For monthly-distributing funds it is calculated as the latest monthly dividend × 12 ÷ NAV; for quarterly-distributing funds, the latest quarterly dividend × 4 ÷ NAV. Applicable to Short Term income-generating holdings such as fixed income and direct lending funds. Shown as <span style="color:var(--ink-soft);font-family:'DM Mono',monospace">—</span> for positions that do not make regular cash distributions.</div>
+          </div>
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.12em;color:var(--gold);text-transform:uppercase;margin-bottom:6px">Ann. Return</div>
+            <div style="font-size:11.5px;color:var(--ink-muted);line-height:1.7">The annualised total return for Short Term holdings, sourced directly from the BoS performance monitoring sheets. It is defined as cumulative total return — comprising NAV appreciation plus all income distributed since inception — scaled to an annual rate using the formula: cumulative total return × (365 ÷ actual holding days). This metric captures the full economic return of the position to date. Shown as <span style="color:var(--ink-soft);font-family:'DM Mono',monospace">—</span> for Long Term holdings, where IRR is the applicable return measure.</div>
+          </div>
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.12em;color:var(--gold);text-transform:uppercase;margin-bottom:6px">IRR</div>
+            <div style="font-size:11.5px;color:var(--ink-muted);line-height:1.7">Internal Rate of Return, the annualised discount rate at which the net present value of all cash flows equals zero. For Long Term holdings it is computed using the XIRR methodology: actual capital call dates are used as outflows, interim distributions (including recallable distributions) as inflows, and current NAV as the terminal value as at 31 January 2026. A negative IRR indicates that, at this point in the fund's life, the current NAV has not yet recovered the cost of capital deployed — common in the early years of closed-end private funds. Shown as <span style="color:var(--ink-soft);font-family:'DM Mono',monospace">—</span> for Short Term holdings.</div>
+          </div>
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.12em;color:var(--gold);text-transform:uppercase;margin-bottom:6px">DPI</div>
+            <div style="font-size:11.5px;color:var(--ink-muted);line-height:1.7">Distributions Paid-In — the ratio of cumulative cash distributions received to total paid-in capital. A DPI of 1.00× signifies that the full amount of invested capital has been returned to the entity in cash. Values below 1.00× are expected during the investment and value-creation phase of private funds, as capital is still deployed and unrealised. DPI is a realisation metric and should be read alongside MOIC to distinguish between cash returned and paper gains. Shown as <span style="color:var(--ink-soft);font-family:'DM Mono',monospace">—</span> for Short Term holdings.</div>
+          </div>
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.12em;color:var(--gold);text-transform:uppercase;margin-bottom:6px">MOIC</div>
+            <div style="font-size:11.5px;color:var(--ink-muted);line-height:1.7">Multiple on Invested Capital — the total value created relative to capital invested, calculated as (current NAV + cumulative distributions) ÷ principal invested. Unlike IRR, MOIC is time-agnostic and measures the absolute magnitude of value creation regardless of holding period. A MOIC above 1.00× indicates the position has generated positive total value; below 1.00× indicates that the combined NAV and cash returned have not yet recovered the original investment. Shown as <span style="color:var(--ink-soft);font-family:'DM Mono',monospace">—</span> for Short Term holdings.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECTION 3 — LIQUIDITY
+════════════════════════════════════════════ -->
+<section class="section" id="section-liquidity">
+
+  <div class="page-header">
+    <h1 class="page-title">Liquidity <em>&amp; Free Cash</em></h1>
+  </div>
+
+  <div class="grid-2">
+    <!-- CASH POSITION -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Cash/FD</span>
+        <span class="card-tag">USD equiv. · MAS Jan 2026 rate</span>
+      </div>
+      <div class="card-body" style="padding:0">
+        <table class="cash-table">
+          <thead>
+            <tr>
+              <th>Account</th>
+              <th>Native Balance</th>
+              <th>USD Equivalent</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background:var(--blue-bg);border-left:3px solid var(--blue)">
+              <td colspan="3" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.12em;color:var(--blue);font-weight:500;text-transform:uppercase;padding:6px 16px">Cash / FD &nbsp;<span style="opacity:0.5">Bank accounts &amp; cash deposits</span></td>
+            </tr>
+            <tr data-ent="5E"><td style="padding-left:28px">5E — BOS (USD)</td><td>USD 83,700</td><td id="liqCash5eBos">$83,700</td></tr>
+            <tr data-ent="5E"><td style="padding-left:28px">5E — DBS (USD)</td><td>USD 496,075</td><td id="liqCash5eDbs">$496,075</td></tr>
+            <tr data-ent="5E"><td style="padding-left:28px">5E — Barclays (USD)</td><td>USD 2,245,467</td><td id="liqCash5eBcl">$2,245,467</td></tr>
+            <tr data-ent="5E"><td style="padding-left:28px">5E — DBS (SGD)</td><td>SGD 934</td><td class="up" id="liqCash5eSgd">$730</td></tr>
+            <tr data-ent="ATH"><td style="padding-left:28px">ATH — DBS (USD)</td><td>USD 1,511,696</td><td id="liqCashAth">$1,511,696</td></tr>
+            <tr data-ent="LPE"><td style="padding-left:28px">LPE — BOS (USD)</td><td>USD 1,682,516</td><td id="liqCashLpe">$1,682,516</td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td>Total Cash/FD</td><td></td><td id="cashTableTotal">$6,020,184</td></tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <!-- FREE CASH WATERFALL -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Free Cash Bridge</span>
+        <span class="card-tag" id="waterfallTag">Consolidated</span>
+      </div>
+      <div class="card-body">
+        <div id="waterfallRows"></div>
+        <div class="divider"></div>
+        <div id="waterfallNote" style="font-family:'DM Mono',monospace;font-size:9px;color:var(--ink-muted);letter-spacing:0.1em">
+          ATH unfunded USD 4,225,899 = KT portion; KF co-investor gap USD 142,746 excluded
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FREE CASH BY ENTITY -->
+  <div class="grid-3" id="fcGrid">
+    <div class="card" id="fc5eCard">
+      <div class="card-header">
+        <span class="card-title">5E</span>
+        <span class="card-tag">Free Cash</span>
+      </div>
+      <div class="card-body" style="padding:16px 20px">
+        <div id="fc5e">
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border-lt)"><span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--ink-muted)">Cash/FD</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--green)" id="fc5eCash">+ $2,825,972</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border-lt)"><span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--ink-muted)">Standby Funds</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--green)" id="fc5eSb">+ $7,252,566</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border-lt)"><span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--ink-muted)">Unfunded Commitments</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--red)" id="fc5eUnf">− $9,703,883</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border-lt)"><span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--ink-muted)">Expenses Forecast</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--red)">− $158,922</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0 0"><span style="font-family:'Jost',sans-serif;font-size:11px;font-weight:600;color:var(--ink)">Free Cash</span><span style="font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:var(--ink)" id="fc5eTotal">$215,733</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card" id="fcAthCard">
+      <div class="card-header">
+        <span class="card-title">ATH</span>
+        <span class="card-tag">Free Cash</span>
+      </div>
+      <div class="card-body" style="padding:16px 20px">
+        <div id="fcAth">
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border-lt)"><span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--ink-muted)">Cash/FD</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--green)" id="fcAthCash">+ $1,511,696</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border-lt)"><span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--ink-muted)">Standby Funds</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--green)" id="fcAthSb">+ $3,455,903</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border-lt)"><span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--ink-muted)">Unfunded (KT portion)</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--red)">− $4,225,899</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border-lt)"><span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--ink-muted)">Expenses Forecast</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--red)">− $12,126</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border-lt)"><span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--ink-muted)">Settlement to 5E</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--red)">− $500,000</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0 0"><span style="font-family:'Jost',sans-serif;font-size:11px;font-weight:600;color:var(--ink)">Free Cash</span><span style="font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:var(--ink)" id="fcAthTotal">$229,574</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card" id="fcLpeCard">
+      <div class="card-header">
+        <span class="card-title">LPE</span>
+        <span class="card-tag">Free Cash</span>
+      </div>
+      <div class="card-body" style="padding:16px 20px">
+        <div id="fcLpe">
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border-lt)"><span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--ink-muted)">Cash/FD</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--green)" id="fcLpeCash">+ $1,682,516</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border-lt)"><span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--ink-muted)">Standby Funds</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--green)" id="fcLpeSb">+ $15,240,217</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border-lt)"><span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--ink-muted)">Unfunded Commitments</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--red)">− $10,186,402</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border-lt)"><span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--ink-muted)">Expenses Forecast</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--red)">− $640,724</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0 0"><span style="font-family:'Jost',sans-serif;font-size:11px;font-weight:600;color:var(--ink)">Free Cash</span><span style="font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:var(--ink)" id="fcLpeTotal">$6,095,608</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STANDBY FUNDS ── -->
+  <div class="divider" style="margin:32px 0 24px"></div>
+  <div class="page-header" style="margin-bottom:20px;padding-bottom:16px">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:28px;color:var(--ink)">Standby <em style="font-style:italic;color:var(--gold)">Funds</em></h2>
+  </div>
+
+  <div id="standbyKpiStrip" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px">
+    <div class="kpi-card blue" id="sbKpi0">
+      <div class="kpi-label">Total Standby Funds</div>
+      <div class="kpi-value"><span class="currency">$</span>25.9M</div>
+      <div class="kpi-sub">3 entities · 10 instruments</div>
+      <div class="kpi-corner">STANDBY</div>
+    </div>
+    <div class="kpi-card gold" id="sbKpi1">
+      <div class="kpi-label">5E</div>
+      <div class="kpi-value"><span class="currency">$</span>7.3M</div>
+      <div class="kpi-sub">2 public market instruments</div>
+    </div>
+    <div class="kpi-card ink" id="sbKpi2">
+      <div class="kpi-label">ATH</div>
+      <div class="kpi-value"><span class="currency">$</span>3.4M</div>
+      <div class="kpi-sub">1 fund (AMH_FD)</div>
+    </div>
+    <div class="kpi-card green" id="sbKpi3">
+      <div class="kpi-label">LPE</div>
+      <div class="kpi-value"><span class="currency">$</span>15.2M</div>
+      <div class="kpi-sub">7 public market instruments</div>
+    </div>
+  </div>
+
+  <div class="grid-65-35">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Standby Fund Breakdown</span>
+        <span class="card-tag">January 2026 · USD</span>
+      </div>
+      <div class="card-body" style="padding:0">
+        <table class="cash-table">
+          <thead>
+            <tr>
+              <th>Entity</th>
+              <th>Investment</th>
+              <th>Strategy</th>
+              <th style="text-align:right">NAV</th>
+              <th style="text-align:right">% of Total</th>
+            </tr>
+          </thead>
+          <tbody id="standbyTbody"></tbody>
+          <tfoot>
+            <tr>
+              <td>Grand Total</td>
+              <td></td>
+              <td></td>
+              <td id="sbFootTotal" style="text-align:right">$25,948,687</td>
+              <td id="sbFootPct"   style="text-align:right">100.0%</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Standby Allocation</span>
+        <span class="card-tag">by Instrument</span>
+      </div>
+      <div class="card-body" style="display:flex;flex-direction:column;align-items:center;gap:16px">
+        <canvas id="standbyPie" width="180" height="180"></canvas>
+        <div class="legend" id="standbyLegend"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DUE AMOUNT FORECAST -->
+  <div class="page-header" style="margin-top:40px">
+    <h2 class="page-title" style="font-size:28px">Due Amount <em>Forecast</em></h2>
+  </div>
+
+  <div class="card">
+    <div class="card-header" style="justify-content:space-between;align-items:center">
+      <span class="card-title" id="dueCardTitle">Due Amount Forecast 2026</span>
+      <div style="display:flex;gap:6px">
+        <button id="duePillAll" onclick="setDueView('all')"
+          style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;
+            padding:5px 14px;border-radius:2px;border:1px solid var(--ink);background:var(--ink);
+            color:#fff;cursor:pointer;transition:all 0.2s">All</button>
+        <button id="duePillCall" onclick="setDueView('call')"
+          style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;
+            padding:5px 14px;border-radius:2px;border:1px solid var(--border);background:transparent;
+            color:var(--ink-muted);cursor:pointer;transition:all 0.2s">Capital Call</button>
+        <button id="duePillExp" onclick="setDueView('exp')"
+          style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;
+            padding:5px 14px;border-radius:2px;border:1px solid var(--border);background:transparent;
+            color:var(--ink-muted);cursor:pointer;transition:all 0.2s">Expenses</button>
+      </div>
+    </div>
+    <div class="card-body" style="padding:0">
+      <div id="dueViewCall">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.12em;
+          text-transform:uppercase;color:var(--red);padding:10px 16px 6px;
+          background:var(--cream);border-bottom:1px solid var(--border-lt)">
+          Capital Call Forecast · Projected calls by fund</div>
+        <div class="table-scroll">
+          <table class="port-table" id="capCallTable">
+            <thead>
+              <tr>
+                <th>Entity</th><th>Fund</th>
+                <th style="text-align:right">Jan</th><th style="text-align:right">Feb</th>
+                <th style="text-align:right">Mar</th><th style="text-align:right">Apr</th>
+                <th style="text-align:right">May</th><th style="text-align:right">Jun</th>
+                <th style="text-align:right">Jul</th><th style="text-align:right">Aug</th>
+                <th style="text-align:right">Sep</th><th style="text-align:right">Oct</th>
+                <th style="text-align:right">Nov</th><th style="text-align:right">Dec</th>
+                <th style="text-align:right">Total</th>
+              </tr>
+            </thead>
+            <tbody id="capCallTbody"></tbody>
+            <tfoot><tr id="capCallFooter"><td colspan="2" style="font-weight:600;font-family:'Jost',sans-serif">Total</td></tr></tfoot>
+          </table>
+        </div>
+      </div>
+      <div id="dueViewExp">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.12em;
+          text-transform:uppercase;color:var(--gold);padding:10px 16px 6px;
+          background:var(--cream);border-bottom:1px solid var(--border-lt);border-top:1px solid var(--border-lt)">
+          Expense Forecast · Scheduled operating expenses</div>
+        <div class="table-scroll">
+          <table class="port-table" id="expForecastTable">
+            <thead>
+              <tr>
+                <th>Entity</th><th>Type</th>
+                <th style="text-align:right">Jan</th><th style="text-align:right">Feb</th>
+                <th style="text-align:right">Mar</th><th style="text-align:right">Apr</th>
+                <th style="text-align:right">May</th><th style="text-align:right">Jun</th>
+                <th style="text-align:right">Jul</th><th style="text-align:right">Aug</th>
+                <th style="text-align:right">Sep</th><th style="text-align:right">Oct</th>
+                <th style="text-align:right">Nov</th><th style="text-align:right">Dec</th>
+                <th style="text-align:right">Total</th>
+              </tr>
+            </thead>
+            <tbody id="expForecastTbody"></tbody>
+            <tfoot><tr id="expForecastFooter"><td colspan="2" style="font-weight:600;font-family:'Jost',sans-serif">Total</td></tr></tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECTION 4 — COMMITMENTS
+════════════════════════════════════════════ -->
+<section class="section" id="section-commitments">
+
+  <div class="page-header">
+    <h1 class="page-title">Unfunded <em>Commitments</em></h1>
+  </div>
+
+  <div class="kpi-strip">
+    <div class="kpi-card gold">
+      <div class="kpi-label">Total Committed</div>
+      <div class="kpi-value"><span class="currency">$</span>35.0M</div>
+      <div class="kpi-sub">Across 11 commitments (incl. 1 not yet active)</div>
+    </div>
+    <div class="kpi-card blue">
+      <div class="kpi-label">Total Invested (Called)</div>
+      <div class="kpi-value"><span class="currency">$</span>10.3M</div>
+      <div class="kpi-sub">29.5% of total committed</div>
+    </div>
+    <div class="kpi-card ink">
+      <div class="kpi-label orange">Unfunded Commitments</div>
+      <div class="kpi-value"><span class="currency">$</span>24.7M</div>
+      <div class="kpi-sub">70.5% yet to be called</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Cash &amp; Standby Funds</div>
+      <div class="kpi-value"><span class="currency">$</span>32.3M</div>
+      <div class="kpi-sub">Cash $6.0M &nbsp;·&nbsp; Standby $25.9M &nbsp;·&nbsp; <span class="up">130.8% coverage vs unfunded ✓</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Commitment Schedule</span>
+      <span class="card-tag">Funded Progress by Investment</span>
+    </div>
+    <div class="card-body" id="commitmentGauges"></div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECTION 5 — RETURN
+════════════════════════════════════════════ -->
+<section class="section" id="section-return">
+
+  <div class="page-header">
+    <h1 class="page-title">Portfolio <em>Return</em></h1>
+  </div>
+
+  <div class="card">
+    <div class="card-header" style="justify-content:space-between;align-items:center">
+      <span class="card-title" id="retCardTitle">Yield by Portfolio</span>
+      <div style="display:flex;gap:6px;align-items:center">
+        <button id="retPillYield" onclick="setReturnView('yield')"
+          style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;
+            padding:5px 14px;border-radius:2px;border:1px solid #2a4a7f;background:#2a4a7f;
+            color:#fff;cursor:pointer;transition:all 0.2s">Yield</button>
+        <button id="retPillReturn" onclick="setReturnView('return')"
+          style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;
+            padding:5px 14px;border-radius:2px;border:1px solid var(--border);background:transparent;
+            color:var(--ink-muted);cursor:pointer;transition:all 0.2s">Return</button>
+        <div style="width:1px;height:16px;background:var(--border);margin:0 4px"></div>
+        <button id="retPillBreakdown" onclick="toggleReturnBreakdown()"
+          style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;
+            padding:5px 14px;border-radius:2px;border:1px solid var(--border);background:transparent;
+            color:var(--ink-muted);cursor:pointer;transition:all 0.2s">Breakdown</button>
+      </div>
+    </div>
+    <div class="card-body" style="padding:0">
+      <div id="retViewYield" class="table-scroll">
+        <table class="port-table">
+          <thead>
+            <tr>
+              <th>Entity</th><th>Investment</th><th>Vintage</th><th>Strategy</th>
+              <th style="text-align:right">Principal</th><th style="text-align:right">NAV</th>
+              <th style="text-align:right;color:#2a4a7f">Mth Yield $</th>
+              <th style="text-align:right;color:#2a4a7f">Mth Yield %</th>
+              <th style="text-align:right;color:#2a4a7f">YTD Yield $</th>
+              <th style="text-align:right;color:#2a4a7f">YTD Yield %</th>
+              <th style="text-align:right;color:#2a4a7f">All Time Yield</th>
+            </tr>
+          </thead>
+          <tbody id="returnTbodyYield"></tbody>
+          <tfoot>
+            <tr style="background:var(--cream)">
+              <td colspan="4" style="font-weight:700;font-family:'Jost',sans-serif;letter-spacing:0.06em;text-transform:uppercase;font-size:10px">Total Portfolio (KPI)</td>
+              <td id="retFootYPrin" style="text-align:right;font-weight:700">—</td>
+              <td id="retFootYNav"  style="text-align:right;font-weight:700">—</td>
+              <td id="retFootMthYld"    style="text-align:right;font-weight:700;color:#2a4a7f">—</td>
+              <td id="retFootMthYldP"   style="text-align:right;font-weight:700;color:#2a4a7f">—</td>
+              <td id="retFootYtdYld"    style="text-align:right;font-weight:700;color:#2a4a7f">—</td>
+              <td id="retFootYtdYldP"   style="text-align:right;font-weight:700;color:#2a4a7f">—</td>
+              <td id="retFootAllTimeYld" style="text-align:right;font-weight:700;color:#2a4a7f">—</td>
+            </tr>
+            <tr style="border-top:1px solid #4b5260;background:#5a5f68" class="ret-dark">
+              <td><span style="font-family:'DM Mono';font-size:9px;padding:2px 7px;border-radius:2px;background:#ffffff18;color:#d1d5db;font-weight:500;letter-spacing:0.1em">5E</span></td>
+              <td style="padding-left:12px;font-style:italic;color:#d1d5db">Gunung Raja (GGRP)</td>
+              <td style="text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:#9ca3af">2023</td>
+              <td style="color:#9ca3af;font-size:11px">Public – Equity</td>
+              <td id="retFootYGrpPrin" style="text-align:right;font-weight:500;color:#d1d5db">—</td>
+              <td id="retFootYGrpNav"  style="text-align:right;font-weight:500;color:#d1d5db">—</td>
+              <td id="retFootYGrpMthYld"  style="text-align:right;font-weight:500;color:#d1d5db">—</td>
+              <td id="retFootYGrpMthYldP" style="text-align:right;font-weight:500;color:#9ca3af">—</td>
+              <td id="retFootYGrpYtdYld"  style="text-align:right;font-weight:500;color:#d1d5db">—</td>
+              <td id="retFootYGrpYtdYldP" style="text-align:right;font-weight:500;color:#9ca3af">—</td>
+              <td id="retFootYGrpAllTime" style="text-align:right;font-weight:500;color:#d1d5db">—</td>
+            </tr>
+            <tr style="border-top:1px solid #4b5260;background:#5a5f68" class="ret-dark">
+              <td><span style="font-family:'DM Mono';font-size:9px;padding:2px 7px;border-radius:2px;background:#ffffff18;color:#d1d5db;font-weight:500;letter-spacing:0.1em">KIL</span></td>
+              <td style="padding-left:12px;font-style:italic;color:#d1d5db">Odin Hills J8 (WIP)</td>
+              <td style="text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:#9ca3af">2025</td>
+              <td style="color:#9ca3af;font-size:11px">Real Asset – Property</td>
+              <td id="retFootYOdinPrin" style="text-align:right;font-weight:500;color:#d1d5db">—</td>
+              <td id="retFootYOdinNav"  style="text-align:right;font-weight:500;color:#d1d5db">—</td>
+              <td colspan="5" style="text-align:center;font-style:italic;color:#9ca3af;font-size:9px">WIP — return not applicable</td>
+            </tr>
+            <tr style="border-top:2px solid #4b5260;background:#5a5f68" class="ret-dark">
+              <td colspan="4" style="font-weight:700;font-family:'Jost',sans-serif;letter-spacing:0.06em;text-transform:uppercase;font-size:10px;color:#d1d5db">Total Portfolio</td>
+              <td id="retFootYAllPrin"   style="text-align:right;font-weight:700;color:#d1d5db">—</td>
+              <td id="retFootYAllNav"    style="text-align:right;font-weight:700;color:#d1d5db">—</td>
+              <td id="retFootYAllMthYld" style="text-align:right;font-weight:700;color:#d1d5db">—</td>
+              <td id="retFootYAllMthYldP" style="text-align:right;font-weight:700;color:#9ca3af">—</td>
+              <td id="retFootYAllYtdYld" style="text-align:right;font-weight:700;color:#d1d5db">—</td>
+              <td id="retFootYAllYtdYldP" style="text-align:right;font-weight:700;color:#9ca3af">—</td>
+              <td id="retFootYAllAllTime" style="text-align:right;font-weight:700;color:#d1d5db">—</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <div id="retViewReturn" class="table-scroll" style="display:none">
+        <table class="port-table">
+          <thead>
+            <tr>
+              <th>Entity</th><th>Investment</th><th>Vintage</th><th>Strategy</th>
+              <th style="text-align:right">Principal</th><th style="text-align:right">NAV</th>
+              <th style="text-align:right">Monthly Return</th><th style="text-align:right">Monthly %</th>
+              <th style="text-align:right">YTD Return</th><th style="text-align:right">YTD %</th>
+              <th style="text-align:right">All Time Return</th><th style="text-align:right">All Time %</th>
+            </tr>
+          </thead>
+          <tbody id="returnTbodyReturn"></tbody>
+          <tfoot>
+            <tr style="background:var(--cream)">
+              <td colspan="4" style="font-weight:700;font-family:'Jost',sans-serif;letter-spacing:0.06em;text-transform:uppercase;font-size:10px">Total Portfolio (KPI)</td>
+              <td id="retFootRPrin" style="text-align:right;font-weight:700">—</td>
+              <td id="retFootRNav"  style="text-align:right;font-weight:700">—</td>
+              <td id="retFootMtd"   style="text-align:right;font-weight:700">—</td>
+              <td id="retFootMtdP"  style="text-align:right;font-weight:700">—</td>
+              <td id="retFootYtd"   style="text-align:right;font-weight:700">—</td>
+              <td id="retFootYtdP"  style="text-align:right;font-weight:700">—</td>
+              <td id="retFootAt"    style="text-align:right;font-weight:700">—</td>
+              <td id="retFootAtP"   style="text-align:right;font-weight:700">—</td>
+            </tr>
+            <tr style="border-top:1px solid #4b5260;background:#5a5f68" class="ret-dark">
+              <td><span style="font-family:'DM Mono';font-size:9px;padding:2px 7px;border-radius:2px;background:#ffffff18;color:#d1d5db;font-weight:500;letter-spacing:0.1em">5E</span></td>
+              <td style="padding-left:12px;font-style:italic;color:#d1d5db">Gunung Raja (GGRP)</td>
+              <td style="text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:#9ca3af">2023</td>
+              <td style="color:#9ca3af;font-size:11px">Public – Equity</td>
+              <td id="retFootRGrpPrin" style="text-align:right;font-weight:500;color:#d1d5db">—</td>
+              <td id="retFootRGrpNav"  style="text-align:right;font-weight:500;color:#d1d5db">—</td>
+              <td id="retFootRGrpMtd"  style="text-align:right;font-weight:500;color:#d1d5db">—</td>
+              <td id="retFootRGrpMtdP" style="text-align:right;font-weight:500;color:#9ca3af">—</td>
+              <td id="retFootRGrpYtd"  style="text-align:right;font-weight:500;color:#d1d5db">—</td>
+              <td id="retFootRGrpYtdP" style="text-align:right;font-weight:500;color:#9ca3af">—</td>
+              <td id="retFootRGrpAt"   style="text-align:right;font-weight:500;color:#d1d5db">—</td>
+              <td id="retFootRGrpAtP"  style="text-align:right;font-weight:500;color:#9ca3af">—</td>
+            </tr>
+            <tr style="border-top:1px solid #4b5260;background:#5a5f68" class="ret-dark">
+              <td><span style="font-family:'DM Mono';font-size:9px;padding:2px 7px;border-radius:2px;background:#ffffff18;color:#d1d5db;font-weight:500;letter-spacing:0.1em">KIL</span></td>
+              <td style="padding-left:12px;font-style:italic;color:#d1d5db">Odin Hills J8 (WIP)</td>
+              <td style="text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:#9ca3af">2025</td>
+              <td style="color:#9ca3af;font-size:11px">Real Asset – Property</td>
+              <td id="retFootROdinPrin" style="text-align:right;font-weight:500;color:#d1d5db">—</td>
+              <td id="retFootROdinNav"  style="text-align:right;font-weight:500;color:#d1d5db">—</td>
+              <td colspan="6" style="text-align:center;font-style:italic;color:#9ca3af;font-size:9px">WIP — return not applicable</td>
+            </tr>
+            <tr style="border-top:2px solid #4b5260;background:#5a5f68" class="ret-dark">
+              <td colspan="4" style="font-weight:700;font-family:'Jost',sans-serif;letter-spacing:0.06em;text-transform:uppercase;font-size:10px;color:#d1d5db">Total Portfolio</td>
+              <td id="retFootRAllPrin" style="text-align:right;font-weight:700;color:#d1d5db">—</td>
+              <td id="retFootRAllNav"  style="text-align:right;font-weight:700;color:#d1d5db">—</td>
+              <td id="retFootRAllMtd"  style="text-align:right;font-weight:700;color:#d1d5db">—</td>
+              <td id="retFootRAllMtdP" style="text-align:right;font-weight:700;color:#9ca3af">—</td>
+              <td id="retFootRAllYtd"  style="text-align:right;font-weight:700;color:#d1d5db">—</td>
+              <td id="retFootRAllYtdP" style="text-align:right;font-weight:700;color:#9ca3af">—</td>
+              <td id="retFootRAllAt"   style="text-align:right;font-weight:700;color:#d1d5db">—</td>
+              <td id="retFootRAllAtP"  style="text-align:right;font-weight:700;color:#9ca3af">—</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- RETURN BREAKDOWN CARD -->
+  <div class="card" style="margin-top:24px;display:none" id="retBreakdownCard">
+    <div class="card-header">
+      <span class="card-title">Return Calculation — Methodology &amp; Breakdown</span>
+      <span class="card-tag">Feb 2026 · GGRP excluded from KPI totals</span>
+    </div>
+    <div class="card-body" style="padding:24px 28px">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px">
+        <div style="background:var(--cream);border-radius:4px;padding:16px 18px;border-left:3px solid #2a4a7f">
+          <div style="font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#2a4a7f;margin-bottom:8px">Feb Return</div>
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink);line-height:1.8">(Feb NAV − Jan NAV)<br>+ Feb Distribution</div>
+          <div style="margin-top:10px;font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:#2a4a7f" id="bdgMtd">—</div>
+        </div>
+        <div style="background:var(--cream);border-radius:4px;padding:16px 18px;border-left:3px solid #2a7a5a">
+          <div style="font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#2a7a5a;margin-bottom:8px">YTD Return (Jan + Feb)</div>
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink);line-height:1.8">Jan Return<br>+ Feb Return</div>
+          <div style="margin-top:10px;font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:#2a7a5a" id="bdgYtd">—</div>
+        </div>
+        <div style="background:var(--cream);border-radius:4px;padding:16px 18px;border-left:3px solid var(--gold)">
+          <div style="font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">All Time Return</div>
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink);line-height:1.8">(Feb NAV − Principal)<br>+ Cumulative Distributions</div>
+          <div style="margin-top:10px;font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:var(--gold)" id="bdgAt">—</div>
+        </div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;font-family:'DM Mono',monospace;font-size:11px">
+        <thead>
+          <tr style="border-bottom:2px solid var(--border)">
+            <th style="text-align:left;padding:8px 12px;font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Group</th>
+            <th style="text-align:right;padding:8px 12px;font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Jan NAV</th>
+            <th style="text-align:right;padding:8px 12px;font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Feb NAV</th>
+            <th style="text-align:right;padding:8px 12px;font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Feb Distribution</th>
+            <th style="text-align:right;padding:8px 12px;font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Jan Return</th>
+            <th style="text-align:right;padding:8px 12px;font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Feb Return</th>
+            <th style="text-align:right;padding:8px 12px;font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">YTD Return</th>
+            <th style="text-align:right;padding:8px 12px;font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">All Time Return</th>
+          </tr>
+        </thead>
+        <tbody id="retBreakdownBody"></tbody>
+        <tfoot id="retBreakdownFoot"></tfoot>
+      </table>
+      <div style="margin-top:24px">
+        <div style="font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:12px">Fund-level Detail</div>
+        <table style="width:100%;border-collapse:collapse;font-family:'DM Mono',monospace;font-size:10px">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border)">
+              <th style="text-align:center;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted);width:28px">#</th>
+              <th style="text-align:left;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Ent</th>
+              <th style="text-align:left;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Fund</th>
+              <th style="text-align:right;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Jan NAV</th>
+              <th style="text-align:right;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Feb NAV</th>
+              <th style="text-align:right;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Feb Dis</th>
+              <th style="text-align:right;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Jan Ret</th>
+              <th style="text-align:right;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Feb Ret</th>
+              <th style="text-align:right;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">YTD</th>
+            </tr>
+          </thead>
+          <tbody id="retBreakdownFundBody"></tbody>
+          <tfoot id="retBreakdownFundFoot"></tfoot>
+        </table>
+      </div>
+      <div style="margin-top:16px;padding:12px 16px;background:var(--cream);border-radius:3px;font-family:'Jost',sans-serif;font-size:11px;color:var(--ink-muted);line-height:1.6">
+        <strong style="color:var(--ink)">Notes:</strong>
+        GGRP (Gunung Raja) is shown in the Return tab table under <em>Long Term – GGRP</em> but is <strong>excluded from the Overview KPI boxes</strong> for Monthly and YTD Return, as its NAV appreciation is treated separately from operating portfolio returns.
+        Jan NAV = January 31, 2026 valuation. Feb NAV = February 28, 2026 valuation. Feb Distribution = income distributed during February 2026.
+        Jan Return = (Jan NAV − Dec NAV) + Jan dividend. YTD = Jan Return + Feb MTD Return.
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECTION 6 — REAL ESTATE
+════════════════════════════════════════════ -->
+<section class="section" id="section-realestate">
+
+  <div class="page-header">
+    <h1 class="page-title">Odin Hills <em>J8</em></h1>
+  </div>
+
+  <div class="kpi-strip">
+    <div class="kpi-card gold">
+      <div class="kpi-label">Total Budget</div>
+      <div class="kpi-value"><span class="currency">$</span>5.165M</div>
+      <div class="kpi-sub">Full project commitment</div>
+    </div>
+    <div class="kpi-card blue" id="kilSpentKpi">
+      <div class="kpi-label">Cumulative Spend</div>
+      <div class="kpi-value"><span class="currency">$</span>3.095M</div>
+      <div class="kpi-sub">59.9% of total budget utilised</div>
+    </div>
+    <div class="kpi-card green" id="kilRemKpi">
+      <div class="kpi-label">Remaining Budget</div>
+      <div class="kpi-value"><span class="currency">$</span>2.070M</div>
+      <div class="kpi-sub">Yet to be deployed</div>
+    </div>
+    <div class="kpi-card ink">
+      <div class="kpi-label">NAV / Book Value</div>
+      <div class="kpi-value"><span class="currency">$</span>3.095M</div>
+      <div class="kpi-sub">At cost (no external valuation)</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <div class="card-header">
+      <span class="card-title">Budget Utilisation</span>
+      <span class="card-tag">by Cost Category · February 2026</span>
+    </div>
+    <div class="card-body" id="kilGauges" style="padding:24px 28px">
+      <div style="margin-bottom:18px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
+          <span style="font-family:'Jost',sans-serif;font-size:12px;font-weight:600;color:#2a303c">1. Land Purchase</span>
+          <span style="font-family:'DM Mono',monospace;font-size:10px;color:#5a6278">$1,806,005 spent &nbsp;/&nbsp; $1,737,968 budget &nbsp;&nbsp;<span style="color:#a03030;font-weight:700">103.9%</span> utilised &nbsp;&nbsp;<span style="color:#a03030">Over budget</span></span>
+        </div>
+        <div style="height:3px;background:rgba(184,154,90,0.2);border-radius:2px;overflow:hidden"><div style="height:100%;width:100.0%;background:#a03030;border-radius:2px"></div></div>
+      </div>
+      <div style="margin-bottom:18px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
+          <span style="font-family:'Jost',sans-serif;font-size:12px;font-weight:600;color:#2a303c">2. PM Fees</span>
+          <span style="font-family:'DM Mono',monospace;font-size:10px;color:#5a6278">$565,627 spent &nbsp;/&nbsp; $929,144 budget &nbsp;&nbsp;<span style="color:#2d7a5f;font-weight:700">60.9%</span> utilised &nbsp;&nbsp;<span style="color:#5a6278">$363,517 remaining</span></span>
+        </div>
+        <div style="height:3px;background:rgba(184,154,90,0.2);border-radius:2px;overflow:hidden"><div style="height:100%;width:60.9%;background:#2d7a5f;border-radius:2px"></div></div>
+      </div>
+      <div style="margin-bottom:18px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
+          <span style="font-family:'Jost',sans-serif;font-size:12px;font-weight:600;color:#2a303c">3. Construction Fees</span>
+          <span style="font-family:'DM Mono',monospace;font-size:10px;color:#5a6278">$676,837 spent &nbsp;/&nbsp; $2,339,572 budget &nbsp;&nbsp;<span style="color:#2d7a5f;font-weight:700">28.9%</span> utilised &nbsp;&nbsp;<span style="color:#5a6278">$1,662,735 remaining</span></span>
+        </div>
+        <div style="height:3px;background:rgba(184,154,90,0.2);border-radius:2px;overflow:hidden"><div style="height:100%;width:28.9%;background:#2d7a5f;border-radius:2px"></div></div>
+      </div>
+      <div style="margin-bottom:18px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
+          <span style="font-family:'Jost',sans-serif;font-size:12px;font-weight:600;color:#2a303c">4. Title Reg.</span>
+          <span style="font-family:'DM Mono',monospace;font-size:10px;color:#5a6278">$3,084 spent &nbsp;/&nbsp; $3,041 budget &nbsp;&nbsp;<span style="color:#a03030;font-weight:700">100.0%</span> utilised &nbsp;&nbsp;<span style="color:#a03030">Over budget</span></span>
+        </div>
+        <div style="height:3px;background:rgba(184,154,90,0.2);border-radius:2px;overflow:hidden"><div style="height:100%;width:100.0%;background:#a03030;border-radius:2px"></div></div>
+      </div>
+      <div style="margin-bottom:18px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
+          <span style="font-family:'Jost',sans-serif;font-size:12px;font-weight:600;color:#2a303c">5. Kazoku Set-Up</span>
+          <span style="font-family:'DM Mono',monospace;font-size:10px;color:#5a6278">$4,750 spent &nbsp;/&nbsp; $3,625 budget &nbsp;&nbsp;<span style="color:#a03030;font-weight:700">131.0%</span> utilised &nbsp;&nbsp;<span style="color:#a03030">Over budget</span></span>
+        </div>
+        <div style="height:3px;background:rgba(184,154,90,0.2);border-radius:2px;overflow:hidden"><div style="height:100%;width:84.8%;background:#c07030;border-radius:2px"></div></div>
+      </div>
+      <div style="margin-bottom:18px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
+          <span style="font-family:'Jost',sans-serif;font-size:12px;font-weight:600;color:#2a303c">6. Legal Fees</span>
+          <span style="font-family:'DM Mono',monospace;font-size:10px;color:#5a6278">$34,847 spent &nbsp;/&nbsp; $46,415 budget &nbsp;&nbsp;<span style="color:#2d7a5f;font-weight:700">75.1%</span> utilised &nbsp;&nbsp;<span style="color:#5a6278">$11,568 remaining</span></span>
+        </div>
+        <div style="height:3px;background:rgba(184,154,90,0.2);border-radius:2px;overflow:hidden"><div style="height:100%;width:75.1%;background:#2d7a5f;border-radius:2px"></div></div>
+      </div>
+      <div style="margin-bottom:18px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
+          <span style="font-family:'Jost',sans-serif;font-size:12px;font-weight:600;color:#2a303c">7. Taxes</span>
+          <span style="font-family:'DM Mono',monospace;font-size:10px;color:#5a6278">$283 spent &nbsp;/&nbsp; $96,215 budget &nbsp;&nbsp;<span style="color:#2d7a5f;font-weight:700">0.3%</span> utilised &nbsp;&nbsp;<span style="color:#5a6278">$95,932 remaining</span></span>
+        </div>
+        <div style="height:3px;background:rgba(184,154,90,0.2);border-radius:2px;overflow:hidden"><div style="height:100%;width:0.3%;background:#2d7a5f;border-radius:2px"></div></div>
+      </div>
+      <div style="margin-bottom:4px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
+          <span style="font-family:'Jost',sans-serif;font-size:12px;font-weight:600;color:#2a303c">8. Other Fees</span>
+          <span style="font-family:'DM Mono',monospace;font-size:10px;color:#5a6278">$3,865 spent &nbsp;/&nbsp; $9,671 budget &nbsp;&nbsp;<span style="color:#2d7a5f;font-weight:700">40.0%</span> utilised &nbsp;&nbsp;<span style="color:#5a6278">$5,806 remaining</span></span>
+        </div>
+        <div style="height:3px;background:rgba(184,154,90,0.2);border-radius:2px;overflow:hidden"><div style="height:100%;width:40.0%;background:#2d7a5f;border-radius:2px"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <div class="card-header">
+      <span class="card-title">Expense Forecast 2026</span>
+      <span class="card-tag">KIL · Odin Hills J8 · by Category</span>
+    </div>
+    <div class="card-body" style="padding:0">
+      <div class="table-scroll">
+        <table class="port-table">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th style="text-align:right">Jan</th><th style="text-align:right">Feb</th>
+              <th style="text-align:right">Mar</th><th style="text-align:right">Apr</th>
+              <th style="text-align:right">May</th><th style="text-align:right">Jun</th>
+              <th style="text-align:right">Jul</th><th style="text-align:right">Aug</th>
+              <th style="text-align:right">Sep</th><th style="text-align:right">Oct</th>
+              <th style="text-align:right">Nov</th><th style="text-align:right">Dec</th>
+              <th style="text-align:right">Total</th>
+            </tr>
+          </thead>
+          <tbody id="kilExpTbody"></tbody>
+          <tfoot>
+            <tr id="kilExpFooter">
+              <td style="font-weight:600;font-family:'Jost',sans-serif">Total</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+</main>
+
+<!-- ── JAVASCRIPT ── -->
+<script src="static/js/dashboard.js"></script>
+
+</body>
+</html>
