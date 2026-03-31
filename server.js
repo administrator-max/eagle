@@ -23,18 +23,18 @@ app.use(session({
   cookie: {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production', // HTTPS only on Heroku
-    maxAge: 8 * 60 * 60 * 1000  // 8 hours session
+    maxAge: 8 * 60 * 60 * 1000  // 8 hours
   }
 }));
 
-// ── ANTI-CRAWL HEADERS (applied to every response) ─────────
+// ── ANTI-CRAWL HEADERS ──────────────────────────────────────
 app.use((req, res, next) => {
-  res.setHeader('X-Robots-Tag',          'noindex, nofollow, noarchive, nosnippet, noimageindex');
-  res.setHeader('X-Content-Type-Options','nosniff');
-  res.setHeader('X-Frame-Options',       'DENY');
-  res.setHeader('Referrer-Policy',       'no-referrer');
-  res.setHeader('Cache-Control',         'no-store, no-cache, must-revalidate, private');
-  res.setHeader('Pragma',                'no-cache');
+  res.setHeader('X-Robots-Tag',           'noindex, nofollow, noarchive, nosnippet, noimageindex');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options',        'DENY');
+  res.setHeader('Referrer-Policy',        'no-referrer');
+  res.setHeader('Cache-Control',          'no-store, no-cache, must-revalidate, private');
+  res.setHeader('Pragma',                 'no-cache');
   next();
 });
 
@@ -46,6 +46,11 @@ function requireAuth(req, res, next) {
 
 // ── ROUTES ──────────────────────────────────────────────────
 
+// robots.txt — block all crawlers
+app.get('/robots.txt', (req, res) => {
+  res.type('text/plain').send('User-agent: *\nDisallow: /\n');
+});
+
 // PIN page (GET)
 app.get('/pin', (req, res) => {
   if (req.session && req.session.authenticated) return res.redirect('/');
@@ -55,21 +60,16 @@ app.get('/pin', (req, res) => {
 // PIN verification (POST)
 app.post('/pin', (req, res) => {
   const entered = (req.body.pin || '').trim();
-
   if (entered === PIN) {
     req.session.authenticated = true;
     return res.redirect('/');
   }
-
-  // Wrong PIN — redirect back with error flag
   res.redirect('/pin?error=1');
 });
 
 // Logout
 app.get('/logout', (req, res) => {
-  req.session.destroy(() => {
-    res.redirect('/pin');
-  });
+  req.session.destroy(() => res.redirect('/pin'));
 });
 
 // Dashboard (protected)
@@ -77,10 +77,10 @@ app.get('/', requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Static assets (CSS, JS) — protected
+// Static assets — protected
 app.use('/static', requireAuth, express.static(path.join(__dirname, 'static')));
 
-// ── START ───────────────────────────────────────────────────
+// ── START ────────────────────────────────────────────────────
 app.listen(PORT, () => {
-  console.log(`✅  Eagle I Dashboard running on port ${PORT}`);
+  console.log(`✅  Eagle I running on port ${PORT}`);
 });

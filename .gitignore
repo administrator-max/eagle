@@ -1,6 +1,5 @@
-# Environment variables — NEVER commit this to git
-.env
-
-# Node
 node_modules/
-npm-debug.log*
+.env
+.env.*
+.DS_Store
+*.log
