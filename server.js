@@ -12,6 +12,9 @@ if (!PIN) {
   process.exit(1);
 }
 
+// ── TRUST HEROKU PROXY (wajib agar secure cookie bekerja) ──
+app.set('trust proxy', 1);
+
 // ── MIDDLEWARE ──────────────────────────────────────────────
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -22,8 +25,9 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production', // HTTPS only on Heroku
-    maxAge: 8 * 60 * 60 * 1000  // 8 hours
+    secure: true,     // selalu HTTPS — Heroku selalu HTTPS
+    sameSite: 'lax',
+    maxAge: 8 * 60 * 60 * 1000  // 8 jam
   }
 }));
 
