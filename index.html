@@ -607,6 +607,45 @@
     tr.ret-dark td span[style*="color:#2a7a5a"],
     tr.ret-dark td span[style*="color:#a03030"],
     tr.ret-dark td span[style*="color:#2a4a7f"] { color: #d1d5db !important; }
+
+  /* ── Contacts ── */
+
+  .contact-card {
+    background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+    border-radius:10px;padding:18px 20px;transition:background 0.15s;
+    display:flex;flex-direction:column;gap:3px;
+  }
+  .contact-card:hover { background:rgba(255,255,255,0.07); }
+  .contact-name { font-family:'Jost',sans-serif;font-size:15px;font-weight:700;color:var(--text-primary);margin-bottom:1px; }
+  .contact-org  { font-family:'Jost',sans-serif;font-size:12px;font-weight:600;color:var(--gold);letter-spacing:0.03em;display:flex;align-items:center;gap:7px;flex-wrap:wrap; }
+  .contact-role { font-family:'Jost',sans-serif;font-size:12px;color:var(--text-muted);line-height:1.4;margin-bottom:10px; }
+  .contact-info-block { display:flex;flex-direction:column;gap:6px;margin-bottom:12px; }
+  .contact-row  { display:flex;align-items:center;gap:8px; }
+  .contact-mail-icon { color:var(--gold-lt);display:flex;align-items:center;flex-shrink:0;opacity:0.85;transition:opacity 0.15s; }
+  .contact-mail-icon:hover { opacity:1; }
+  .contact-phone-icon { color:var(--text-muted);display:flex;align-items:center;flex-shrink:0;opacity:0.7; }
+  .contact-phone { font-family:'DM Mono',monospace;font-size:12px;color:var(--text-muted); }
+  .contact-actions { display:flex;gap:8px;flex-wrap:wrap; }
+  .contact-action-btn {
+    display:inline-flex;align-items:center;gap:5px;
+    padding:5px 11px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);
+    background:rgba(255,255,255,0.05);color:var(--text-primary);
+    font-family:'Jost',sans-serif;font-size:11px;font-weight:600;
+    text-decoration:none;cursor:pointer;transition:all 0.15s;letter-spacing:0.02em;
+    white-space:nowrap;
+  }
+  .contact-action-btn:hover { background:rgba(255,255,255,0.12); }
+  .contact-action-btn.email-btn { border:none;background:none;padding:0;color:var(--gold-lt);font-size:12px;font-weight:400;font-family:'DM Mono',monospace;word-break:break-all;white-space:normal;letter-spacing:0; }
+  .contact-action-btn.email-btn:hover { background:none;text-decoration:underline; }
+  .contact-action-btn.copy-btn { border-color:rgba(255,255,255,0.1);color:var(--text-muted); }
+  .contact-action-btn.copy-btn:hover { background:rgba(255,255,255,0.1);color:var(--text-primary); }
+  .contact-action-btn.save-btn { border-color:rgba(176,128,32,0.3);color:var(--gold); }
+  .contact-action-btn.save-btn:hover { background:rgba(176,128,32,0.12); }
+  .contact-fund-tag {
+    display:inline-block;font-family:'DM Mono',monospace;font-size:9px;font-weight:600;
+    letter-spacing:0.1em;padding:2px 7px;border-radius:3px;
+  }
+
   </style>
 </head>
 <body>
@@ -625,6 +664,7 @@
     <button class="nav-btn" onclick="showSection('return')">Return</button>
     <button class="nav-btn" onclick="showSection('liquidity')">Liquidity</button>
     <button class="nav-btn" onclick="showSection('realestate')">Real Estate</button>
+    <button class="nav-btn" onclick="showSection('contacts')">Contacts</button>
   </nav>
   <div class="header-meta">
     <select id="periodSelect" onchange="setPeriod(this.value)"
@@ -1672,6 +1712,29 @@
 
 </section>
 
+<!-- ════════════════════════════════════════════
+     SECTION 7 — CONTACTS
+════════════════════════════════════════════ -->
+<section class="section" id="section-contacts">
+
+  <div class="page-header">
+    <h1 class="page-title">Key <em>Contacts</em></h1>
+    <p id="contactsSubtitle" style="font-family:'Jost',sans-serif;font-size:13px;color:var(--text-muted);margin-top:4px;"></p>
+  </div>
+
+  <!-- Search bar -->
+  <div style="margin-bottom:20px;">
+    <input id="contactSearch" type="text" placeholder="Search name, organisation, or role…"
+      oninput="renderContacts()"
+      style="width:100%;max-width:420px;padding:8px 14px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:var(--text-primary);font-family:'Jost',sans-serif;font-size:13px;outline:none;box-sizing:border-box;">
+  </div>
+
+  <!-- Cards grid -->
+  <div id="contactsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;"></div>
+  <div id="contactsEmpty" style="display:none;text-align:center;padding:48px;color:var(--text-muted);font-family:'Jost',sans-serif;font-size:14px;">No contacts match your filter.</div>
+
+</section>
+
 </main>
 
 <script>  // ═══════════════════════════════════════════
@@ -1844,6 +1907,7 @@ function showSection(id) {
   document.getElementById('section-'+id).classList.add('active');
   const btn = document.querySelector(`.nav-btn[onclick*="${id}"]`);
   if (btn) btn.classList.add('active');
+  if (id === 'contacts') renderContacts();
 }
 
 // ─── COLOUR PALETTE ─────────────────────────────────────────────
@@ -2895,37 +2959,14 @@ drawLine('cashTrend', [{data:cashVals, color:C.teal||C.blue, fill:'rgba(26,122,1
 // ─── DRAW CHARTS ─────────────────────────────────────────────────
 window.addEventListener('load', () => {
 
-  renderEntitySummary('ALL');
+  // Initialise snapshot data first — this sets activeCashMap, activeFcMap,
+  // activeSbMap, investments, returnData etc., then calls refreshAll()
+  setPeriod(activePeriod);
 
-  refreshCharts();
-  // KIL expense forecast table
+  // KIL-specific renders not covered by refreshAll
   renderKILExpForecast();
-
-  // Populate entity cards & tables
-  renderPortfolioTable();
-  renderCommitments();
-  renderExpenses();
   renderKILGauges();
   updateKILSummaryKPI();
-  renderLiquidityCash();
-  renderStandby();
-
-  if (activeFcCards) {
-    if (activeFcCards.fc5e)  fcCard('fc5e',  activeFcCards.fc5e);
-    if (activeFcCards.fcAth) fcCard('fcAth', activeFcCards.fcAth);
-    if (activeFcCards.fcLpe) fcCard('fcLpe', activeFcCards.fcLpe);
-    if (activeFcCards.fcZpp) fcCard('fcZpp', activeFcCards.fcZpp);
-  } else {
-    fcCard('fc5e', [{label:'Cash/FD',sign:'+',val:2825972},{label:'Standby Funds',sign:'+',val:7252566},{label:'Unfunded Commitments',sign:'−',val:9703883},{label:'Expenses Forecast',sign:'−',val:158922},{label:'Free Cash',sign:'=',val:215733}]);
-    fcCard('fcAth',[{label:'Cash/FD',sign:'+',val:1511696},{label:'Standby Funds',sign:'+',val:3455903},{label:'Unfunded (KT portion)',sign:'−',val:4225899},{label:'Expenses Forecast',sign:'−',val:12126},{label:'Settlement to 5E',sign:'−',val:500000},{label:'Free Cash',sign:'=',val:229574}]);
-    fcCard('fcLpe',[{label:'Cash/FD',sign:'+',val:1682516},{label:'Standby Funds',sign:'+',val:15240217},{label:'Unfunded Commitments',sign:'−',val:10186402},{label:'Expenses Forecast',sign:'−',val:640724},{label:'Free Cash',sign:'=',val:6095608}])
-    fcCard('fcZpp',[{label:'Cash/FD',sign:'+',val:29133},{label:'Standby Funds',sign:'+',val:1600000},{label:'Unfunded Commitments',sign:'−',val:1569161},{label:'Free Cash',sign:'=',val:59972}]);
-  }
-
-  refreshLiquidity('ALL');
-
-  // Run full refresh after a short delay to ensure DOM is fully settled
-  setTimeout(() => { refreshAll(); }, 50);
 
 });
 
@@ -3164,6 +3205,7 @@ function refreshAll() {
   if (_pfDpi)  _pfDpi.textContent  = _tDpi.toFixed(2)+'×';
 
   refreshCharts();
+  renderContacts();
 }
 
 function fmtM(n) {
@@ -4021,6 +4063,174 @@ function renderDueAmountFiltered(ent) {
         <td style="text-align:right;font-family:'DM Mono',monospace;font-size:11px;font-weight:700;color:${C.gold}">${grandTotal>0?fmt(grandTotal):'—'}</td>`;
     }
   }
+}
+
+// ═══════════════════════════════════════════
+// CONTACTS
+// ═══════════════════════════════════════════
+const CONTACTS = [
+  // LPE
+  {fund:'LPE', org:'Clearlake Capital Partners',       name:'Kelvin Chang',               role:'Principal – Investor Relations',                       email:'kelvin.chang@clearlake.com',            phone:'+65 9836 2712'},
+  {fund:'LPE', org:'Thoma Bravo',                      name:'Carly Flerlage',              role:'Investor Services',                                    email:'investor.services@thomabravo.com',       phone:'+1 312 254 3396'},
+  {fund:'LPE', org:'Cambridge Associates',             name:'Will Case',                   role:'Director – Investor Relations',                        email:'wcase@cambridgeassociates.com',          phone:'+1 857 895 6976'},
+  {fund:'LPE', org:'Galvanize',                        name:'Kory Reed',                   role:'Vice President, Investor Partnerships',                email:'kory.reed@galvanizeclimate.com',         phone:'+1 415 622 3149'},
+  // 5E
+  {fund:'5E',  org:'Neuberger Berman',                 name:'Greg Wu',                     role:'Head of Southeast Asia, Hong Kong and Taiwan Institutional Business', email:'Greg.Wu@nb.com',            phone:'+65 8811 5645'},
+  {fund:'5E',  org:'PSG Equity',                       name:'Lisa Lee',                    role:'Managing Director – Investor Relations',               email:'Lisa.Lee@psgequity.com',                phone:''},
+  {fund:'5E',  org:'MSA Capital',                      name:'Jiali Mao',                   role:'Chief Operating Officer',                              email:'jiali@msacap.com',                      phone:''},
+  {fund:'5E',  org:'MSA Capital',                      name:'Ben Harburg',                 role:'Managing Partner',                                     email:'ben@msacap.com',                        phone:''},
+  {fund:'5E',  org:'MSA Capital',                      name:'Jenny Zeng',                  role:'Managing Partner',                                     email:'jennyzeng@msacap.com',                  phone:''},
+  {fund:'5E',  org:'Colbeck',                          name:'Gregory Budetti',             role:'Head of BD & IR',                                      email:'gbudetti@colbeck.com',                  phone:'+1 314 540 9555'},
+  {fund:'5E',  org:'Lexington Capital Partners',       name:'Katie Lisle',                 role:'Vice President, Investor Relations',                   email:'klisle@lexpartners.com',                phone:'+1 212 754 0411'},
+  {fund:'5E',  org:'Lexington Capital Partners',       name:'Nina Cebenko',                role:'Research Analyst',                                     email:'ncebenko@lexpartners.com',              phone:''},
+  // ATH
+  {fund:'ATH', org:'TIFF Investment Management',       name:'Angela Yu',                   role:'Associate Director, Client Services',                  email:'ayu@tiff.org',                          phone:'+1 610 636 7619'},
+  {fund:'ATH', org:'TIFF Investment Management',       name:'Zhe Shen',                    role:'Managing Director, Head of Diversifying Strategies',   email:'zshen@tiff.org',                        phone:'+1 617 758 6523'},
+  {fund:'ATH', org:'TIFF Investment Management',       name:'Samantha Gross',              role:'Client CIO',                                           email:'sgross@tiff.org',                       phone:'+1 617 939 8990'},
+  {fund:'ATH', org:'CommonFund Private Equity',        name:'Paul C. McKiernan',           role:'Managing Director – Investor Relations',               email:'Paul.McKiernan@cfprivateequity.com',    phone:'+1 914 980 5535'},
+  {fund:'ATH', org:'CommonFund Private Equity',        name:'Alessandro Giacometti',       role:'Associate Director',                                   email:'alessandro.giacometti@cfprivateequity.com', phone:'+1 646 348 9241'},
+  {fund:'ATH', org:'Bonaccord Capital Partners',       name:'JP Armenio',                  role:'Managing Director',                                    email:'jp.armenio@bonaccordcapital.com',       phone:'+1 917 375 6215'},
+  {fund:'ATH', org:'Bonaccord Capital Partners',       name:'Bonaccord Investor Services', role:'Investor Services',                                    email:'BCP_Services@bonaccordcapital.com',     phone:''},
+  {fund:'ATH', org:'BlueMark',                         name:'Christina Leijonhufvud',      role:'CEO',                                                  email:'christina@bluemark.co',                 phone:'+1 917 912 4723'},
+  {fund:'ATH', org:'BlueMark',                         name:'Kim Wright-Violich',          role:'Co-Founder & Chair',                                   email:'kim@tideline.com',                      phone:'+1 415 806 0195'},
+  {fund:'ATH', org:'Thrive Alternatives',              name:'Chris Lerner',                role:'Group Chairman & Co-Founder',                          email:'chris@thrivealts.com',                  phone:''},
+  {fund:'ATH', org:'Thrive Alternatives',              name:'Jackson Chan',                role:'CEO & Co-Founder',                                     email:'jackson@thrivealts.com',                phone:''},
+  // ZPP
+  {fund:'ZPP', org:'BSP – Alcentra',                  name:'Advin Chua',                  role:'Partnerships',                                         email:'Advin.Chua@benefitstreetpartners.com',  phone:'+65 8181 6528'},
+  {fund:'ZPP', org:'BSP – Alcentra',                  name:'Jay Kim',                     role:'Head of APAC Distribution',                            email:'j.kim@benefitstreetpartners.com',       phone:'+65 9374 5005'},
+  // KIL – Odin Hills
+  {fund:'KIL', org:'Odin Hills (Developer & PM)',      name:'Rhea Khemlani',               role:'Associate',                                            email:'rhea@odin-property.com',                phone:'+852 9724 6997'},
+  {fund:'KIL', org:'Odin Hills (Developer & PM)',      name:'Nicolas Gontard',             role:'Director',                                             email:'nicolas@odin-property.com',             phone:'+852 9021 6678'},
+  {fund:'KIL', org:'Alt Design + Construction',        name:'Vincent Mcllduff',            role:'Founding Partner + Architect',                         email:'vincent@altdesignconstruction.com',     phone:'+852 9827 0227'},
+  {fund:'KIL', org:'Wakisaka Construction',            name:'Sasaki Kenji',                role:'Site Manager Supervisor',                              email:'sasaki@wakisaka-eo.jp',                 phone:''},
+  {fund:'KIL', org:'Wakisaka Construction',            name:'Sasaki Fujisawa',             role:'Director',                                             email:'fujisawa@wakisaka-eo.jp',               phone:'9088962118'},
+  {fund:'KIL', org:'Nisade Real Estate (Japan Tax Agent)', name:'Wang Zirui',             role:'Real Estate Licensee',                                 email:'W.Zirui@nisadeservices.com',            phone:'+81 70-2263-2753'},
+  {fund:'KIL', org:'MINA KAMUY Legal Services',        name:'Emi Shimizu',                 role:'Counsel (J8 Title Deed Registration)',                  email:'emi@mina-kamuy.com',                    phone:'+81 136 21 7333'},
+  {fund:'KIL', org:'MINA KAMUY Legal Services',        name:'Yumiko Nishiizum',            role:'Counsel (J8 Title Deed Registration)',                  email:'yumiko@mina-kamuy.com',                 phone:'+81 136 21 7333'},
+];
+
+const FUND_TAG_STYLES = {
+  'LPE': {bg:'rgba(42,74,127,0.25)',  color:'#7a9fd4'},
+  '5E':  {bg:'rgba(176,128,32,0.2)',  color:'#d4a93a'},
+  'ATH': {bg:'rgba(60,100,60,0.25)',  color:'#7dcf95'},
+  'ZPP': {bg:'rgba(100,60,100,0.25)',color:'#c495d4'},
+  'KIL': {bg:'rgba(140,58,42,0.25)', color:'#d4795a'},
+};
+const FUND_LABEL = {LPE:'LPE', '5E':'5E', ATH:'ATH', ZPP:'ZPP', KIL:'KIL'};
+
+let _contactFundFilter = 'all';
+
+function filterContacts(fund) {
+  _contactFundFilter = fund;
+  event.currentTarget.classList.add('active');
+  renderContacts();
+}
+
+function copyContactInfo(idx) {
+  const c = CONTACTS[idx];
+  const parts = [c.name, c.org, c.role];
+  if (c.email) parts.push(c.email);
+  if (c.phone) parts.push(c.phone);
+  navigator.clipboard.writeText(parts.join('\n')).then(() => {
+    const btn = document.getElementById('copy-btn-'+idx);
+    if (btn) { btn.textContent = '✓ Copied'; setTimeout(()=>{ btn.textContent = '⊕ Copy'; },1800); }
+  });
+}
+
+function saveContact(idx) {
+  const c = CONTACTS[idx];
+  // Split name into first/last
+  const nameParts = c.name.trim().split(/\s+/);
+  const firstName = nameParts.slice(0, -1).join(' ') || c.name;
+  const lastName  = nameParts.length > 1 ? nameParts[nameParts.length - 1] : '';
+  // Build vCard 3.0
+  const lines = [
+    'BEGIN:VCARD',
+    'VERSION:3.0',
+    `N:${lastName};${firstName};;;`,
+    `FN:${c.name}`,
+    `ORG:${c.org}`,
+    `TITLE:${c.role}`,
+  ];
+  if (c.email) lines.push(`EMAIL;TYPE=WORK:${c.email}`);
+  if (c.phone) lines.push(`TEL;TYPE=WORK,VOICE:${c.phone}`);
+  lines.push('END:VCARD');
+  const blob = new Blob([lines.join('\r\n')], {type:'text/vcard'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `${c.name.replace(/\s+/g,'_')}.vcf`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function renderContacts() {
+  const grid  = document.getElementById('contactsGrid');
+  const empty = document.getElementById('contactsEmpty');
+  if (!grid) return;
+  const q   = (document.getElementById('contactSearch')?.value||'').toLowerCase();
+  const ent = typeof activeEntity !== 'undefined' ? activeEntity : 'ALL';
+
+  // Derive which funds to show based on entity pill
+  let fundFilter = null; // null = show all
+  if (ent === 'ALLX') fundFilter = ['LPE','5E','ATH','KIL']; // exclude ZPP
+  else if (ent !== 'ALL') fundFilter = [ent];
+
+  // Update subtitle
+  const sub = document.getElementById('contactsSubtitle');
+  if (sub) {
+    const label = ent === 'ALL' ? 'All Entities' : ent === 'ALLX' ? 'All excl. ZPP' : (FUND_LABEL[ent]||ent);
+    sub.textContent = label;
+  }
+
+  const filtered = CONTACTS.filter(c => {
+    const fundOk = !fundFilter || fundFilter.includes(c.fund);
+    const qOk    = !q || [c.name,c.org,c.role,c.email].some(s=>(s||'').toLowerCase().includes(q));
+    return fundOk && qOk;
+  }).sort((a, b) => {
+    const lastName = n => n.trim().split(/\s+/).slice(-1)[0].toLowerCase();
+    const firstName = n => n.trim().split(/\s+/)[0].toLowerCase();
+    const ll = lastName(a.name).localeCompare(lastName(b.name));
+    return ll !== 0 ? ll : firstName(a.name).localeCompare(firstName(b.name));
+  });
+
+  if (!filtered.length) {
+    grid.innerHTML = ''; empty.style.display='block'; return;
+  }
+  empty.style.display = 'none';
+
+  grid.innerHTML = filtered.map(c => {
+    const globalIdx = CONTACTS.indexOf(c);
+    const emailRow = c.email ? `
+      <div class="contact-row">
+        <a href="mailto:${c.email}" class="contact-mail-icon" title="Send email">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        </a>
+        <a href="mailto:${c.email}" class="contact-action-btn email-btn">${c.email}</a>
+      </div>` : '';
+    const phoneRow = c.phone ? `
+      <div class="contact-row">
+        <span class="contact-phone-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 16.92z"/></svg>
+        </span>
+        <span class="contact-phone">${c.phone}</span>
+      </div>` : '';
+    const copyBtn = `<button id="copy-btn-${globalIdx}" class="contact-action-btn copy-btn" onclick="copyContactInfo(${globalIdx})">⊕ Copy</button>`;
+    const saveBtn = `<button class="contact-action-btn save-btn" onclick="saveContact(${globalIdx})">＋ Save</button>`;
+    return `
+    <div class="contact-card">
+      <div class="contact-name">${c.name}</div>
+      <div class="contact-org">${c.org}</div>
+      <div class="contact-role">${c.role}</div>
+      <div class="contact-info-block">
+        ${emailRow}
+        ${phoneRow}
+      </div>
+      <div class="contact-actions">${copyBtn}${saveBtn}</div>
+    </div>`;
+  }).join('');
 }
 </script>
 </body>
