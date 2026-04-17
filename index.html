@@ -59,7 +59,6 @@
     background: var(--ink);
     padding: 0 48px;
     display: flex; align-items: stretch;
-    border-bottom: 1px solid rgba(184,154,90,0.3);
   }
   .header-brand {
     display: flex; flex-direction: column;
@@ -104,9 +103,7 @@
     transform: scaleX(0); transition: transform 0.2s;
   }
   .nav-btn:hover { color: rgba(255,255,255,0.8); }
-  .nav-btn:hover::after { transform: scaleX(1); }
   .nav-btn.active { color: var(--gold-lt); }
-  .nav-btn.active::after { transform: scaleX(1); }
   .header-meta {
     display: flex; align-items: center; gap: 20px;
     margin-left: auto;
@@ -568,34 +565,14 @@
   .entity-pill.ent-ath.active { color: #7a5c20; border-bottom-color: #b89a5a; }
   .entity-pill.ent-lpe.active { color: #1a5c40; border-bottom-color: #2d7a5f; }
   .entity-pill.ent-kil.active { color: #783c28; border-bottom-color: #783c28; }
+  .entity-pill.ent-lpe.active { color: #1a5c40; }
+  .entity-pill.ent-kil.active { color: #783c28; }
   .entity-pill .pill-dot {
     display: inline-block; width: 6px; height: 6px; border-radius: 50%;
     margin-right: 7px; vertical-align: middle; position: relative; top: -1px;
   }
   .entity-pill .pill-nav { font-size: 9px; color: var(--ink-muted); margin-left: 5px; }
   .entity-bar-sep { width: 1px; height: 20px; background: var(--border-lt); margin: 0 4px; }
-  /* entity context banner */
-  .entity-banner {
-    display: none; background: var(--ink);
-    padding: 11px 48px; align-items: center; gap: 0;
-    border-bottom: 1px solid rgba(184,154,90,0.2);
-  }
-  .entity-banner.visible { display: flex; }
-  .eb-name {
-    font-family: 'Cormorant Garamond', serif; font-size: 17px;
-    font-weight: 300; color: var(--gold-lt); letter-spacing: 0.1em;
-    min-width: 160px;
-  }
-  .eb-kpis { display: flex; gap: 28px; }
-  .eb-kpi  { display: flex; flex-direction: column; gap: 2px; }
-  .eb-lbl  {
-    font-family: 'DM Mono', monospace; font-size: 8px;
-    color: rgba(255,255,255,0.3); letter-spacing: 0.15em; text-transform: uppercase;
-  }
-  .eb-val  {
-    font-family: 'DM Mono', monospace; font-size: 11px;
-    color: rgba(255,255,255,0.85);
-  }
   .eb-val.up   { color: #5db896; }
   .eb-val.down { color: #d47a7a; }
 
@@ -675,6 +652,7 @@
              padding-right:14px;
              background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%226%22><path d=%22M0 0l5 6 5-6z%22 fill=%22%23ffffff%22/></svg>');
              background-repeat:no-repeat;background-position:right 0 center;">
+      <option value="2026-03">As of March 2026</option>
       <option value="2026-02">As of February 2026</option>
       <option value="2026-01">As of January 2026</option>
     </select>
@@ -710,10 +688,6 @@
 </div>
 
 <!-- ── ENTITY CONTEXT BANNER ── -->
-<div class="entity-banner" id="entityBanner">
-  <div class="eb-name" id="ebName"></div>
-  <div class="eb-kpis" id="ebKpis"></div>
-</div>
 </div>
 
 
@@ -1501,25 +1475,25 @@
   <div class="card" style="margin-top:24px;display:none" id="retBreakdownCard">
     <div class="card-header">
       <span class="card-title">Return Calculation — Methodology &amp; Breakdown</span>
-      <span class="card-tag">Feb 2026 · GGRP excluded from KPI totals</span>
+      <span class="card-tag" id="bdgCardTag">Feb 2026 · GGRP excluded from KPI totals</span>
     </div>
     <div class="card-body" style="padding:24px 28px">
 
       <!-- Formula box -->
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px">
         <div style="background:var(--cream);border-radius:4px;padding:16px 18px;border-left:3px solid #2a4a7f">
-          <div style="font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#2a4a7f;margin-bottom:8px">Feb Return</div>
-          <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink);line-height:1.8">(Feb NAV − Jan NAV)<br>+ Feb Distribution</div>
+          <div style="font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#2a4a7f;margin-bottom:8px" id="bdgMtdLabel">Mth Return</div>
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink);line-height:1.8" id="bdgMtdFormula">(Cur NAV − Prev NAV)<br>+ Mth Distribution</div>
           <div style="margin-top:10px;font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:#2a4a7f" id="bdgMtd">—</div>
         </div>
         <div style="background:var(--cream);border-radius:4px;padding:16px 18px;border-left:3px solid #2a7a5a">
-          <div style="font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#2a7a5a;margin-bottom:8px">YTD Return (Jan + Feb)</div>
-          <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink);line-height:1.8">Jan Return<br>+ Feb Return</div>
+          <div style="font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#2a7a5a;margin-bottom:8px" id="bdgYtdLabel">YTD Return</div>
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink);line-height:1.8" id="bdgYtdFormula">Sum of all monthly returns</div>
           <div style="margin-top:10px;font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:#2a7a5a" id="bdgYtd">—</div>
         </div>
         <div style="background:var(--cream);border-radius:4px;padding:16px 18px;border-left:3px solid var(--gold)">
-          <div style="font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">All Time Return</div>
-          <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink);line-height:1.8">(Feb NAV − Principal)<br>+ Cumulative Distributions</div>
+          <div style="font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:8px" id="bdgAtLabel">All Time Return</div>
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink);line-height:1.8" id="bdgAtFormula">(Cur NAV − Principal)<br>+ Cumulative Distributions</div>
           <div style="margin-top:10px;font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:var(--gold)" id="bdgAt">—</div>
         </div>
       </div>
@@ -1529,11 +1503,11 @@
         <thead>
           <tr style="border-bottom:2px solid var(--border)">
             <th style="text-align:left;padding:8px 12px;font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Group</th>
-            <th style="text-align:right;padding:8px 12px;font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Jan NAV</th>
-            <th style="text-align:right;padding:8px 12px;font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Feb NAV</th>
-            <th style="text-align:right;padding:8px 12px;font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Feb Distribution</th>
-            <th style="text-align:right;padding:8px 12px;font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Jan Return</th>
-            <th style="text-align:right;padding:8px 12px;font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Feb Return</th>
+            <th style="text-align:right;padding:8px 12px;font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)" id="bdgH1">Prev NAV</th>
+            <th style="text-align:right;padding:8px 12px;font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)" id="bdgH2">Cur NAV</th>
+            <th style="text-align:right;padding:8px 12px;font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)" id="bdgH3">Mth Distribution</th>
+            <th style="text-align:right;padding:8px 12px;font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)" id="bdgH4">Prior Mths Return</th>
+            <th style="text-align:right;padding:8px 12px;font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)" id="bdgH5">Mth Return</th>
             <th style="text-align:right;padding:8px 12px;font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">YTD Return</th>
             <th style="text-align:right;padding:8px 12px;font-family:'Jost',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">All Time Return</th>
           </tr>
@@ -1551,11 +1525,11 @@
               <th style="text-align:center;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted);width:28px">#</th>
               <th style="text-align:left;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Ent</th>
               <th style="text-align:left;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Fund</th>
-              <th style="text-align:right;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Jan NAV</th>
-              <th style="text-align:right;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Feb NAV</th>
-              <th style="text-align:right;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Feb Dis</th>
-              <th style="text-align:right;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Jan Ret</th>
-              <th style="text-align:right;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">Feb Ret</th>
+              <th style="text-align:right;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)" id="bdgFH1">Prev NAV</th>
+              <th style="text-align:right;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)" id="bdgFH2">Cur NAV</th>
+              <th style="text-align:right;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)" id="bdgFH3">Mth Dis</th>
+              <th style="text-align:right;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)" id="bdgFH4">Prior Ret</th>
+              <th style="text-align:right;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)" id="bdgFH5">Mth Ret</th>
               <th style="text-align:right;padding:6px 10px;font-family:'Jost',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted)">YTD</th>
             </tr>
           </thead>
@@ -1564,11 +1538,7 @@
         </table>
       </div>
 
-      <div style="margin-top:16px;padding:12px 16px;background:var(--cream);border-radius:3px;font-family:'Jost',sans-serif;font-size:11px;color:var(--ink-muted);line-height:1.6">
-        <strong style="color:var(--ink)">Notes:</strong>
-        GGRP (Gunung Raja) is shown in the Return tab table under <em>Long Term – GGRP</em> but is <strong>excluded from the Overview KPI boxes</strong> for Monthly and YTD Return, as its NAV appreciation is treated separately from operating portfolio returns.
-        Jan NAV = January 31, 2026 valuation. Feb NAV = February 28, 2026 valuation. Feb Distribution = income distributed during February 2026.
-        Jan Return = (Jan NAV − Dec NAV) + Jan dividend. YTD = Jan Return + Feb MTD Return.
+      <div style="margin-top:16px;padding:12px 16px;background:var(--cream);border-radius:3px;font-family:'Jost',sans-serif;font-size:11px;color:var(--ink-muted);line-height:1.6" id="bdgNotes">
       </div>
 
     </div>
@@ -1601,7 +1571,7 @@
       <div class="kpi-value"><span class="currency">$</span>2.070M</div>
       <div class="kpi-sub">Yet to be deployed</div>
     </div>
-    <div class="kpi-card ink">
+    <div class="kpi-card ink" id="kilNavKpi">
       <div class="kpi-label">NAV / Book Value</div>
       <div class="kpi-value"><span class="currency">$</span>3.095M</div>
       <div class="kpi-sub">At cost (no external valuation)</div>
@@ -1748,10 +1718,117 @@
 // ══════════════════════════════════════════════
 const periodSnapshots = {
 
+
+  '2026-03': {
+    label:'Mar 2026', caption:'March 2026',
+    nativeBalances:{bos:292986,dbs:496075,bcl:2085714,sgdRaw:934,sgd:723,ath:1140793,lpe:1749843,zpp:38422,total:2875498},
+    expenses:{ALL:305457,ALLX:305457,'5E':158922,ATH:5661,LPE:640724,ZPP:0,KIL:0},
+    settlement:500000,
+    returnData:[
+  {name:'INVESCO Sr Loan (5EC)',vintage:2025,ent:'5E',group:'Short Term',strat:'Public – Fixed Inc.',prin:2800000,navDec:2924584,navJan:2930537,yld:0.0496,mthDiv:0,ytdDiv:0,cumDist:0,janRet:-24572},
+  {name:'KKR Income Trust (5EC)',vintage:2025,ent:'5E',group:'Short Term',strat:'Private – Dir. Lend.',prin:4100000,navDec:4327982,navJan:4352044,yld:0.0652,mthDiv:0,ytdDiv:0,cumDist:0,janRet:60152},
+  {name:'TIFF Diversifying (DSF)',vintage:2025,ent:'ATH',group:'Short Term',strat:'Alternatives – Hedge',prin:2000000,navDec:2149931,navJan:2149931,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:49240},
+  {name:'QRT Torus (via TIFF)',vintage:2025,ent:'ATH',group:'Short Term',strat:'Alternatives – Hedge',prin:2000000,navDec:2256148,navJan:2256148,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:157536},
+  {name:'PIMCO GIS Income',vintage:2025,ent:'LPE',group:'Short Term',strat:'Public – Fixed Inc.',prin:2598436,navDec:2621740,navJan:2543366,yld:0.0353,mthDiv:13134,ytdDiv:39402,cumDist:114186,janRet:41437},
+  {name:'JPM Income Fund',vintage:2025,ent:'LPE',group:'Short Term',strat:'Public – Fixed Inc.',prin:2591966,navDec:2565726,navJan:2529356,yld:0.0235,mthDiv:13225,ytdDiv:39676,cumDist:101843,janRet:19837},
+  {name:'M&G Float Rate HY',vintage:2025,ent:'LPE',group:'Short Term',strat:'Public – Fixed Inc.',prin:1291570,navDec:1242370,navJan:1231092,yld:0.0015,mthDiv:5884,ytdDiv:20241,cumDist:69252,janRet:-1267},
+  {name:'Invesco Sr Loan (LPE)',vintage:2025,ent:'LPE',group:'Short Term',strat:'Public – Fixed Inc.',prin:1993742,navDec:1911308,navJan:1905027,yld:0.0000,mthDiv:10309,ytdDiv:35020,cumDist:88774,janRet:-16244},
+  {name:'KKR Income Trust (LPE)',vintage:2025,ent:'LPE',group:'Short Term',strat:'Private – Dir. Lend.',prin:3000000,navDec:2964100,navJan:2960547,yld:0.0403,mthDiv:18948,ytdDiv:66317,cumDist:113685,janRet:42631},
+  {name:'Blackstone BCRED-iCap',vintage:2025,ent:'LPE',group:'Short Term',strat:'Private – Dir. Lend.',prin:2000000,navDec:1954642,navJan:1945995,yld:0.0131,mthDiv:13667,ytdDiv:40985,cumDist:69844,janRet:15367},
+  {name:'OTIC iCap',vintage:2025,ent:'LPE',group:'Short Term',strat:'Private – Dir. Lend.',prin:2000000,navDec:1980331,navJan:1959595,yld:0.0178,mthDiv:12224,ytdDiv:36637,cumDist:61966,janRet:20618},
+  {name:'MSA Venture III',vintage:2021,ent:'5E',group:'Long Term',strat:'Private – VC',prin:899729,navDec:883857,navJan:883857,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0,capitalCall:0},
+  {name:'NB Credit Opp. II',vintage:2021,ent:'5E',group:'Long Term',strat:'Private – Credit',prin:630355,navDec:944874,navJan:944874,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0,capitalCall:0},
+  {name:'Lexington Cap. X',vintage:2022,ent:'5E',group:'Long Term',strat:'Private – Secondary',prin:2451819,navDec:3463666,navJan:3420992,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0,capitalCall:0,recallableDist:42674},
+  {name:'Colbeck Strat. III',vintage:2023,ent:'5E',group:'Long Term',strat:'Private – Credit',prin:1976454,navDec:2242465,navJan:2107631,yld:0.1020,mthDiv:47225,ytdDiv:47225,cumDist:163380,janRet:0,capitalCall:91345,recallableDist:226179},
+  {name:'PSG Equity VI',vintage:2024,ent:'5E',group:'Long Term',strat:'Private – Buyout',prin:1343249,navDec:1196535,navJan:1379532,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0,capitalCall:182997},
+  {name:'Gunung Raja (GGRP)',vintage:2023,ent:'5E',group:'Long Term - GGRP',strat:'Public – Equity',prin:2609822,navDec:6853217,navJan:6160891,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:494755},
+  {name:'BlueMark (ATH)',vintage:2023,ent:'ATH',group:'Long Term',strat:'Direct Co-Investment',prin:500000,navDec:500000,navJan:500000,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0},
+  {name:'Thrive (ATH)',vintage:2024,ent:'ATH',group:'Long Term',strat:'Direct Co-Investment',prin:250000,navDec:250000,navJan:250000,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0},
+  {name:'Asia Heritage (ATH)',vintage:2024,ent:'ATH',group:'Long Term',strat:'Direct Co-Investment',prin:250000,navDec:250000,navJan:250000,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0},
+  {name:'Bonaccord Cap. II',vintage:2024,ent:'ATH',group:'Long Term',strat:'Private – GP Stakes',prin:1661495,navDec:2697644,navJan:2947644,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:34720,janRet:0,capitalCall:250000},
+  {name:'CF PE Co-Inv. V',vintage:2025,ent:'ATH',group:'Long Term',strat:'Private – Buyout',prin:380000,navDec:200000,navJan:380000,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0,capitalCall:180000},
+  {name:'Clearlake Cap. VIII',vintage:2024,ent:'LPE',group:'Long Term',strat:'Private – Buyout',prin:849744,navDec:721344,navJan:721344,yld:0.0000,mthDiv:0,ytdDiv:908,cumDist:908,janRet:908,capitalCall:0},
+  {name:'Galvanize Innov. I',vintage:2022,ent:'LPE',group:'Long Term',strat:'Private – Climate VC',prin:510413,navDec:465412,navJan:483412,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0,capitalCall:18000},
+  {name:'Thoma Bravo XVI-A',vintage:2025,ent:'LPE',group:'Long Term',strat:'Private – Buyout',prin:471442,navDec:459850,navJan:459850,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0,capitalCall:0},
+  {name:'CA Select Co-Inv. (LPE)',vintage:2024,ent:'LPE',group:'Long Term',strat:'Private – Buyout',prin:0,navDec:0,navJan:0,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0},
+  {name:'Odin Hills J8',vintage:2025,ent:'KIL',group:'Real Estate',strat:'Real Asset – Property',prin:3097199,navDec:3093622,navJan:3097199,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0},
+  {name:'PIMCO GIS Income',   vintage:2025,ent:'ZPP',group:'Short Term',strat:'Public – Fixed Inc.',  prin:2650000,navDec:2883347,navJan:2811414,yld:0.0542,mthDiv:0,ytdDiv:0,cumDist:0,janRet:47956},
+  {name:'Invesco Sr Loan',    vintage:2025,ent:'ZPP',group:'Short Term',strat:'Public – Fixed Inc.',  prin:2750000,navDec:2806110,navJan:2811822,yld:0.0200,mthDiv:0,ytdDiv:0,cumDist:0,janRet:-23577},
+  {name:'JPM Income Fund',    vintage:2025,ent:'ZPP',group:'Short Term',strat:'Public – Fixed Inc.',  prin:2750000,navDec:2899131,navJan:2874897,yld:0.0404,mthDiv:0,ytdDiv:0,cumDist:0,janRet:20857},
+  {name:'FTIF Franklin HY',   vintage:2025,ent:'ZPP',group:'Short Term',strat:'Public – Fixed Inc.',  prin:2750000,navDec:2930143,navJan:2890982,yld:0.0456,mthDiv:0,ytdDiv:0,cumDist:0,janRet:24188},
+  {name:'KKR Income Trust',   vintage:2025,ent:'ZPP',group:'Short Term',strat:'Private – Dir. Lend.',prin:6200000,navDec:6656718,navJan:6693726,yld:0.0718,mthDiv:0,ytdDiv:0,cumDist:0,janRet:92518},
+  {name:'Blackstone BCRED',   vintage:2025,ent:'ZPP',group:'Short Term',strat:'Private – Dir. Lend.',prin:6000000,navDec:6255042,navJan:6271109,yld:0.0409,mthDiv:0,ytdDiv:0,cumDist:0,janRet:48663},
+  {name:'OTIC iCap',          vintage:2025,ent:'ZPP',group:'Short Term',strat:'Private – Dir. Lend.',prin:6000000,navDec:6330305,navJan:6303097,yld:0.0458,mthDiv:0,ytdDiv:0,cumDist:0,janRet:65265},
+  {name:'BSP Structured Cr. V',vintage:2026,ent:'ZPP',group:'Long Term',strat:'Private – Credit',prin:530839,navDec:577701,navJan:577701,yld:0.0167,mthDiv:9290,ytdDiv:9290,cumDist:9290,janRet:46862,capitalCall:0}
+],
+    investments:[
+  {name:'INVESCO Sr Loan (5EC)',vintage:2025,ent:'5E',cls:'pub',strat:'Public – Fixed Inc.',group:'Short Term',prin:2800000,nav:2930537,unf:0,dist:0,yield:0.0000,irr:0.0496,dpi:0.00,months:12},
+  {name:'KKR Income Trust (5EC)',vintage:2025,ent:'5E',cls:'priv',strat:'Private – Dir. Lend.',group:'Short Term',prin:4100000,nav:4352044,unf:0,dist:0,yield:0.0000,irr:0.0652,dpi:0.00,months:12},
+  {name:'MSA Venture III',vintage:2021,ent:'5E',cls:'priv',strat:'Private – VC',group:'Long Term',prin:899729,nav:883857,unf:100271,dist:0,yield:0.0000,irr:-0.0056,dpi:0.0,months:42},
+  {name:'NB Credit Opp. II',vintage:2021,ent:'5E',cls:'priv',strat:'Private – Credit',group:'Long Term',prin:630355,nav:944874,unf:369645,dist:364672,yield:0.0000,irr:0.1203,dpi:0.5476,months:33},
+  {name:'Lexington Cap. X',vintage:2022,ent:'5E',cls:'priv',strat:'Private – Secondary',group:'Long Term',prin:2451819,nav:3420992,unf:2548181,dist:409630,yield:0.0000,irr:0.1831,dpi:0.1671,months:25},
+  {name:'Colbeck Strat. III',vintage:2023,ent:'5E',cls:'priv',strat:'Private – Credit',group:'Long Term',prin:1976454,nav:2107631,unf:3023546,dist:517107,yield:0.1020,irr:0.1099,dpi:0.2614,months:17},
+  {name:'PSG Equity VI',vintage:2024,ent:'5E',cls:'priv',strat:'Private – Buyout',group:'Long Term',prin:1343249,nav:1379532,unf:3656751,dist:123916,yield:0.0000,irr:0.0524,dpi:0.1392,months:9},
+  {name:'BlueMark (ATH)',vintage:2023,ent:'ATH',cls:'co',strat:'Direct Co-Investment',group:'Long Term',prin:500000,nav:500000,unf:0,dist:0,yield:0.0000,irr:0.0000,dpi:0.00,months:27},
+  {name:'Thrive (ATH)',vintage:2024,ent:'ATH',cls:'co',strat:'Direct Co-Investment',group:'Long Term',prin:250000,nav:250000,unf:0,dist:0,yield:0.0000,irr:0.0000,dpi:0.00,months:26},
+  {name:'Asia Heritage (ATH)',vintage:2024,ent:'ATH',cls:'co',strat:'Direct Co-Investment',group:'Long Term',prin:250000,nav:250000,unf:0,dist:0,yield:0.0000,irr:0.0000,dpi:0.00,months:23},
+  {name:'Bonaccord Cap. II',vintage:2024,ent:'ATH',cls:'priv',strat:'Private – GP Stakes',group:'Long Term',prin:1661495,nav:2947644,unf:3338505,dist:804774,yield:0.0000,irr:0.9090,dpi:0.4843,months:23},
+  {name:'CF PE Co-Inv. V',vintage:2025,ent:'ATH',cls:'priv',strat:'Private – Buyout',group:'Long Term',prin:380000,nav:380000,unf:620000,dist:0,yield:0.0000,irr:-0.1512,dpi:0.0,months:2},
+  {name:'TIFF Diversifying (DSF)',vintage:2025,ent:'ATH',cls:'alt',strat:'Alternatives – Hedge',group:'Short Term',prin:2000000,nav:2149931,unf:0,dist:0,yield:0.0750,irr:0.1503,dpi:0.00,months:6},
+  {name:'QRT Torus (via TIFF)',vintage:2025,ent:'ATH',cls:'alt',strat:'Alternatives – Hedge',group:'Short Term',prin:2000000,nav:2256148,unf:0,dist:0,yield:0.0000,irr:0.2569,dpi:0.00,months:6},
+  {name:'PIMCO GIS Income',vintage:2025,ent:'LPE',cls:'pub',strat:'Public – Fixed Inc.',group:'Short Term',prin:2598436,nav:2543366,unf:0,dist:101052,yield:0.0354,irr:0.0353,dpi:0.0389,months:7},
+  {name:'JPM Income Fund',vintage:2025,ent:'LPE',cls:'pub',strat:'Public – Fixed Inc.',group:'Short Term',prin:2591966,nav:2529356,unf:0,dist:88618,yield:0.0235,irr:0.0235,dpi:0.0342,months:7},
+  {name:'M&G Float Rate HY',vintage:2025,ent:'LPE',cls:'pub',strat:'Public – Fixed Inc.',group:'Short Term',prin:1291570,nav:1231092,unf:0,dist:54895,yield:0.0015,irr:0.0015,dpi:0.0425,months:7},
+  {name:'Invesco Sr Loan (LPE)',vintage:2025,ent:'LPE',cls:'pub',strat:'Public – Fixed Inc.',group:'Short Term',prin:1993742,nav:1905027,unf:0,dist:76247,yield:0.0000,irr:0.0000,dpi:0.0382,months:7},
+  {name:'KKR Income Trust (LPE)',vintage:2025,ent:'LPE',cls:'priv',strat:'Private – Dir. Lend.',group:'Short Term',prin:3000000,nav:2960547,unf:0,dist:90001,yield:0.0403,irr:0.0403,dpi:0.0300,months:6},
+  {name:'Blackstone BCRED-iCap',vintage:2025,ent:'LPE',cls:'priv',strat:'Private – Dir. Lend.',group:'Short Term',prin:2000000,nav:1945995,unf:0,dist:56186,yield:0.0131,irr:0.0131,dpi:0.0281,months:6},
+  {name:'OTIC iCap',vintage:2025,ent:'LPE',cls:'priv',strat:'Private – Dir. Lend.',group:'Short Term',prin:2000000,nav:1959595,unf:0,dist:49738,yield:0.0178,irr:0.0178,dpi:0.0249,months:6},
+  {name:'Clearlake Cap. VIII',vintage:2024,ent:'LPE',cls:'priv',strat:'Private – Buyout',group:'Long Term',prin:849744,nav:721344,unf:4150257,dist:908,yield:0.0000,irr:-0.4092,dpi:0.0011,months:5},
+  {name:'Galvanize Innov. I',vintage:2022,ent:'LPE',cls:'priv',strat:'Private – Climate VC',group:'Long Term',prin:510413,nav:483412,unf:489587,dist:17,yield:0.0000,irr:-0.1305,dpi:0.0,months:4},
+  {name:'Thoma Bravo XVI-A',vintage:2025,ent:'LPE',cls:'priv',strat:'Private – Buyout',group:'Long Term',prin:471442,nav:459850,unf:4528558,dist:0,yield:0.0000,irr:-0.0837,dpi:0.0,months:2},
+  {name:'CA Select Co-Inv. (LPE)',vintage:2024,ent:'LPE',cls:'priv',strat:'Private – Buyout',group:'Long Term',prin:0,nav:0,unf:1000000,dist:0,yield:0.0000,irr:0.0000,dpi:0.00,months:0},
+  {name:'Gunung Raja (GGRP)',vintage:2023,ent:'5E',cls:'pub',strat:'Public – Equity',group:'Long Term - GGRP',prin:2609822,nav:6160891,unf:0,dist:0,yield:0.0000,irr:0.0000,dpi:0.00,months:36},
+  {name:'Odin Hills J8',vintage:2025,ent:'KIL',cls:'re',strat:'Real Asset – Property',group:'Real Estate',prin:3097199,nav:3097199,unf:0,dist:0,yield:0.0000,irr:0.0000,dpi:0.00,months:11},
+  {name:'PIMCO GIS Income',   vintage:2025,ent:'ZPP',cls:'pub',strat:'Public – Fixed Inc.',group:'Short Term',prin:2650000,nav:2811414,unf:0,dist:0,yield:0.0000,irr:0.0542,dpi:0.00,months:12},
+  {name:'Invesco Sr Loan',    vintage:2025,ent:'ZPP',cls:'pub',strat:'Public – Fixed Inc.',group:'Short Term',prin:2750000,nav:2811822,unf:0,dist:0,yield:0.0000,irr:0.0200,dpi:0.00,months:12},
+  {name:'JPM Income Fund',    vintage:2025,ent:'ZPP',cls:'pub',strat:'Public – Fixed Inc.',group:'Short Term',prin:2750000,nav:2874897,unf:0,dist:0,yield:0.0000,irr:0.0404,dpi:0.00,months:12},
+  {name:'FTIF Franklin HY',   vintage:2025,ent:'ZPP',cls:'pub',strat:'Public – Fixed Inc.',group:'Short Term',prin:2750000,nav:2890982,unf:0,dist:0,yield:0.0000,irr:0.0456,dpi:0.00,months:12},
+  {name:'KKR Income Trust',   vintage:2025,ent:'ZPP',cls:'priv',strat:'Private – Dir. Lend.',group:'Short Term',prin:6200000,nav:6693726,unf:0,dist:0,yield:0.0000,irr:0.0718,dpi:0.00,months:12},
+  {name:'Blackstone BCRED',   vintage:2025,ent:'ZPP',cls:'priv',strat:'Private – Dir. Lend.',group:'Short Term',prin:6000000,nav:6271109,unf:0,dist:0,yield:0.0000,irr:0.0409,dpi:0.00,months:12},
+  {name:'OTIC iCap',          vintage:2025,ent:'ZPP',cls:'priv',strat:'Private – Dir. Lend.',group:'Short Term',prin:6000000,nav:6303097,unf:0,dist:0,yield:0.0000,irr:0.0458,dpi:0.00,months:12},
+  {name:'BSP Structured Cr. V',vintage:2026,ent:'ZPP',cls:'priv',strat:'Private – Credit',group:'Long Term',prin:530839,nav:577701,unf:1569161,dist:0,yield:0.0167,irr:0.3187,dpi:0.0175,months:2}
+],
+    cashMap:{ALL:5804556,'5E':2875498,ATH:1140793,LPE:1749843,ZPP:38422,KIL:0},
+    fcMap:{ALL:6641219,'5E':423128,ATH:203056,LPE:6015696,ZPP:-661,KIL:0},
+    sbMap:{ALL:27286990,'5E':7282580,ATH:3399354,LPE:15074978,ZPP:1530078,KIL:0},
+    totalAUM: 86760697,
+    cashVals:[126557,126557,3238552,3238552,4086017,3888071,3884653,3883022,3338239,3329930,3329634,2825972,2874775],
+    standbyFunds:[
+  {name:'LL_FD',             ent:'ZPP', strat:'Liquid Fund',          group:'Short Term', val:1530078},
+  {name:'INVESCO Sr Loan',   ent:'5E',  strat:'Public – Fixed Inc.',  group:'Short Term', val:2930536.58},
+  {name:'KKR Income Trust',  ent:'5E',  strat:'Private – Dir. Lend.', group:'Short Term', val:4352043.50},
+  {name:'AMH_FD',            ent:'ATH', strat:'Liquid Fund',           group:'Short Term', val:3399354},
+  {name:'PIMCO GIS Income',  ent:'LPE', strat:'Public – Fixed Inc.',  group:'Short Term', val:2543365.63},
+  {name:'JPM Income Fund',   ent:'LPE', strat:'Public – Fixed Inc.',  group:'Short Term', val:2529356.39},
+  {name:'M&G Float Rate HY', ent:'LPE', strat:'Public – Fixed Inc.',  group:'Short Term', val:1231091.90},
+  {name:'Invesco Sr Loan',   ent:'LPE', strat:'Public – Fixed Inc.',  group:'Short Term', val:1905026.93},
+  {name:'KKR Income Trust',  ent:'LPE', strat:'Private – Dir. Lend.', group:'Short Term', val:2960547.25},
+  {name:'Blackstone BCRED',  ent:'LPE', strat:'Private – Dir. Lend.', group:'Short Term', val:1945995.28},
+  {name:'OTIC iCap',         ent:'LPE', strat:'Private – Dir. Lend.', group:'Short Term', val:1959595.22},
+],
+    fcCards:{
+      fc5e:[{label:'Cash/FD',sign:'+',val:2874775},{label:'Standby Funds',sign:'+',val:7282580},{label:'Unfunded Commitments',sign:'−',val:9698394},{label:'Expenses Forecast',sign:'−',val:35833},{label:'Free Cash',sign:'=',val:423128}],
+      fcAth:[{label:'Cash/FD',sign:'+',val:1140793},{label:'Standby Funds',sign:'+',val:3399354},{label:'Unfunded (KT portion)',sign:'−',val:3824965},{label:'Expenses Forecast',sign:'−',val:5661},{label:'Settlement to 5E',sign:'−',val:500000},{label:'Free Cash',sign:'=',val:203056}],
+      fcLpe:[{label:'Cash/FD',sign:'+',val:1749843},{label:'Standby Funds',sign:'+',val:15074978},{label:'Unfunded Commitments',sign:'−',val:10168402},{label:'Expenses Forecast',sign:'−',val:34318},{label:'Free Cash',sign:'=',val:6015696}],
+      fcZpp:[{label:'Cash/FD',sign:'+',val:38422},{label:'Standby Funds',sign:'+',val:1530078},{label:'Unfunded Commitments',sign:'−',val:1569161},{label:'Free Cash',sign:'=',val:-661}]
+    },
+    entityMeta: null,
+  },
+
   '2026-01': {
     label:'Jan 2026', caption:'January 2026',
     nativeBalances:{bos:41267,dbs:460490,bcl:2734956,sgdRaw:2331,sgd:1840,ath:1492638,lpe:1588103,zpp:34546,total:6353839},
-    expenses:{ALL:811772,ALLX:811772,'5E':158922,ATH:512126,LPE:640724,ZPP:0,KIL:0},
+    expenses:{ALL:305457,ALLX:305457,'5E':158922,ATH:5661,LPE:640724,ZPP:0,KIL:0},
     settlement:500000,
     returnData:[
   {name:'INVESCO Sr Loan (5EC)',vintage:2025,ent:'5E',group:'Short Term',strat:'Public – Fixed Inc.',prin:2800000,navDec:2949156,navJan:2938516,yld:0.0521,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0},
@@ -1760,27 +1837,27 @@ const periodSnapshots = {
   {name:'QRT Torus (via TIFF)',vintage:2025,ent:'ATH',group:'Short Term',strat:'Alternatives – Hedge',prin:2000000,navDec:2098612,navJan:2100876,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0},
   {name:'PIMCO GIS Income',vintage:2025,ent:'LPE',group:'Short Term',strat:'Public – Fixed Inc.',prin:2598436,navDec:2606571,navJan:2606571,yld:0.0601,mthDiv:13134,ytdDiv:13134,cumDist:87918,janRet:0},
   {name:'JPM Income Fund',vintage:2025,ent:'LPE',group:'Short Term',strat:'Public – Fixed Inc.',prin:2591966,navDec:2572340,navJan:2565726,yld:0.0619,mthDiv:13226,ytdDiv:13226,cumDist:75393,janRet:0},
-  {name:'M&G Float Rate HY',vintage:2025,ent:'LPE',group:'Short Term',strat:'Public – Fixed Inc.',prin:1291570,navDec:1257994,navJan:1251728,yld:0.0663,mthDiv:7492,ytdDiv:7492,cumDist:49011,janRet:0},
+  {name:'M&G Float Rate HY',vintage:2025,ent:'LPE',group:'Short Term',strat:'Public – Fixed Inc.',prin:1291570,navDec:1257994,navJan:1251728,yld:0.0663,mthDiv:7492,ytdDiv:7492,cumDist:56503,janRet:0},
   {name:'Invesco Sr Loan (LPE)',vintage:2025,ent:'LPE',group:'Short Term',strat:'Public – Fixed Inc.',prin:1993742,navDec:1952263,navJan:1932916,yld:0.0787,mthDiv:12184,ytdDiv:12184,cumDist:65938,janRet:0},
   {name:'KKR Income Trust (LPE)',vintage:2025,ent:'LPE',group:'Short Term',strat:'Private – Dir. Lend.',prin:3000000,navDec:2968838,navJan:2970021,yld:0.0959,mthDiv:23685,ytdDiv:23685,cumDist:71053,janRet:0},
   {name:'Blackstone BCRED-iCap',vintage:2025,ent:'LPE',group:'Short Term',strat:'Private – Dir. Lend.',prin:2000000,navDec:1966593,navJan:1960771,yld:0.0839,mthDiv:13660,ytdDiv:13660,cumDist:42519,janRet:0},
   {name:'OTIC iCap',vintage:2025,ent:'LPE',group:'Short Term',strat:'Private – Dir. Lend.',prin:2000000,navDec:1984126,navJan:1984127,yld:0.0741,mthDiv:12185,ytdDiv:12185,cumDist:37514,janRet:0},
-  {name:'MSA Venture III',vintage:2021,ent:'5E',group:'Long Term',strat:'Private – VC',prin:899729,navDec:907125,navJan:912056,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0, capitalCall:4932},
-  {name:'NB Credit Opp. II',vintage:2021,ent:'5E',group:'Long Term',strat:'Private – Credit',prin:665948,navDec:967490,navJan:967490,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0, capitalCall:0},
-  {name:'Lexington Cap. X',vintage:2022,ent:'5E',group:'Long Term',strat:'Private – Secondary',prin:2536896,navDec:3548202,navJan:3506069,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0, capitalCall:0},
-  {name:'Colbeck Strat. III',vintage:2023,ent:'5E',group:'Long Term',strat:'Private – Credit',prin:1621845,navDec:1761261,navJan:1761261,yld:0.0537,mthDiv:0,ytdDiv:0,cumDist:116155,janRet:0, capitalCall:0},
-  {name:'PSG Equity VI',vintage:2024,ent:'5E',group:'Long Term',strat:'Private – Buyout',prin:1160252,navDec:1067315,navJan:1067315,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0, capitalCall:0},
-  {name:'Gunung Raja (GGRP)',vintage:2023,ent:'5E',group:'Long Term - GGRP',strat:'Public – Equity',prin:2645862,navDec:6358462,navJan:6454426,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0},
+  {name:'MSA Venture III',vintage:2021,ent:'5E',group:'Long Term',strat:'Private – VC',prin:899729,navDec:883857,navJan:883857,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0, capitalCall:0},
+  {name:'NB Credit Opp. II',vintage:2021,ent:'5E',group:'Long Term',strat:'Private – Credit',prin:665948,navDec:980467,navJan:980467,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0, capitalCall:0},
+  {name:'Lexington Cap. X',vintage:2022,ent:'5E',group:'Long Term',strat:'Private – Secondary',prin:2536896,navDec:3548202,navJan:3506069,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0, capitalCall:0,recallableDist:42133},
+  {name:'Colbeck Strat. III',vintage:2023,ent:'5E',group:'Long Term',strat:'Private – Credit',prin:1621845,navDec:1753022,navJan:1753022,yld:0.0537,mthDiv:0,ytdDiv:0,cumDist:116155,janRet:0, capitalCall:0},
+  {name:'PSG Equity VI',vintage:2024,ent:'5E',group:'Long Term',strat:'Private – Buyout',prin:1160252,navDec:1196535,navJan:1196535,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0, capitalCall:0},
+  {name:'Gunung Raja (GGRP)',vintage:2023,ent:'5E',group:'Long Term - GGRP',strat:'Public – Equity',prin:2642416,navDec:6358462,navJan:6454426,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0},
   {name:'BlueMark (ATH)',vintage:2023,ent:'ATH',group:'Long Term',strat:'Direct Co-Investment',prin:500000,navDec:500000,navJan:500000,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0},
   {name:'Thrive (ATH)',vintage:2024,ent:'ATH',group:'Long Term',strat:'Direct Co-Investment',prin:250000,navDec:250000,navJan:250000,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0},
   {name:'Asia Heritage (ATH)',vintage:2024,ent:'ATH',group:'Long Term',strat:'Direct Co-Investment',prin:250000,navDec:250000,navJan:250000,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0},
   {name:'Bonaccord Cap. II',vintage:2024,ent:'ATH',group:'Long Term',strat:'Private – GP Stakes',prin:1431355,navDec:2717504,navJan:2717504,yld:0.0132,mthDiv:0,ytdDiv:0,cumDist:34720,janRet:0, capitalCall:0},
   {name:'CF PE Co-Inv. V',vintage:2025,ent:'ATH',group:'Long Term',strat:'Private – Buyout',prin:200000,navDec:0,navJan:200000,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0, capitalCall:200000},
-  {name:'Clearlake Cap. VIII',vintage:2024,ent:'LPE',group:'Long Term',strat:'Private – Buyout',prin:849744,navDec:251778,navJan:751565,yld:0.0000,mthDiv:908,ytdDiv:908,cumDist:908,janRet:0, capitalCall:499787},
+  {name:'Clearlake Cap. VIII',vintage:2024,ent:'LPE',group:'Long Term',strat:'Private – Buyout',prin:849744,navDec:221557,navJan:721344,yld:0.0000,mthDiv:908,ytdDiv:908,cumDist:908,janRet:0, capitalCall:499787},
   {name:'Galvanize Innov. I',vintage:2022,ent:'LPE',group:'Long Term',strat:'Private – Climate VC',prin:492413,navDec:465412,navJan:465412,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0, capitalCall:0},
   {name:'Thoma Bravo XVI-A',vintage:2025,ent:'LPE',group:'Long Term',strat:'Private – Buyout',prin:471442,navDec:459850,navJan:459850,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0, capitalCall:0},
   {name:'CA Select Co-Inv. (LPE)',vintage:2024,ent:'LPE',group:'Long Term',strat:'Private – Buyout',prin:0,navDec:0,navJan:0,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0},
-  {name:'Odin Hills J8',vintage:2025,ent:'KIL',group:'Real Estate',strat:'Real Asset – Property',prin:3095297,navDec:3093622,navJan:3093622,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0},
+  {name:'Odin Hills J8',vintage:2025,ent:'KIL',group:'Real Estate',strat:'Real Asset – Property',prin:3093622,navDec:3093622,navJan:3093622,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0},
   {name:'PIMCO GIS Income',   vintage:2025, ent:'ZPP', group:'Short Term', strat:'Public – Fixed Inc.',   prin:2650000, navDec:2835391, navJan:2851377, yld:0.0760, mthDiv:0, ytdDiv:0, cumDist:0, janRet:0},
   {name:'Invesco Sr Loan',    vintage:2025, ent:'ZPP', group:'Short Term', strat:'Public – Fixed Inc.',   prin:2750000, navDec:2829687, navJan:2819479, yld:0.0253, mthDiv:0, ytdDiv:0, cumDist:0, janRet:0},
   {name:'JPM Income Fund',    vintage:2025, ent:'ZPP', group:'Short Term', strat:'Public – Fixed Inc.',   prin:2750000, navDec:2878274, navJan:2884233, yld:0.0488, mthDiv:0, ytdDiv:0, cumDist:0, janRet:0},
@@ -1788,7 +1865,7 @@ const periodSnapshots = {
   {name:'KKR Income Trust',   vintage:2025, ent:'ZPP', group:'Short Term', strat:'Private – Dir. Lend.', prin:6200000, navDec:6564200, navJan:6619711, yld:0.0677, mthDiv:0, ytdDiv:0, cumDist:0, janRet:0},
   {name:'Blackstone BCRED',   vintage:2025, ent:'ZPP', group:'Short Term', strat:'Private – Dir. Lend.', prin:6000000, navDec:6206379, navJan:6231117, yld:0.0385, mthDiv:0, ytdDiv:0, cumDist:0, janRet:0},
   {name:'OTIC iCap',          vintage:2025, ent:'ZPP', group:'Short Term', strat:'Private – Dir. Lend.', prin:6000000, navDec:6265040, navJan:6303517, yld:0.0506, mthDiv:0, ytdDiv:0, cumDist:0, janRet:0},
-  {name:'BSP Structured Cr. V',vintage:2026,ent:'ZPP', group:'Long Term',  strat:'Private – Credit',     prin:530839,  navDec:0,  navJan:530839,  yld:0.0000, mthDiv:0, ytdDiv:0, cumDist:0, janRet:0, capitalCall:530839}
+  {name:'BSP Structured Cr. V',vintage:2026,ent:'ZPP', group:'Long Term',  strat:'Private – Credit',     prin:530839,  navDec:0,  navJan:577701,  yld:0.0000, mthDiv:0, ytdDiv:0, cumDist:0, janRet:0, capitalCall:530839}
 ],
     investments:[
   {name:'INVESCO Sr Loan (5EC)',vintage:2025,ent:'5E',cls:'pub',strat:'Public – Fixed Inc.',group:'Short Term',prin:2800000,nav:2938516,unf:0,dist:0,yield:0.0000,irr:0.0636,dpi:0.00,months:9},
@@ -1817,7 +1894,7 @@ const periodSnapshots = {
   {name:'Thoma Bravo XVI-A',vintage:2025,ent:'LPE',cls:'priv',strat:'Private – Buyout',group:'Long Term',prin:471442,nav:459850,unf:4528558,dist:0,yield:0.0000,irr:-0.1829,dpi:0.0,months:1},
   {name:'CA Select Co-Inv. (LPE)',vintage:2024,ent:'LPE',cls:'priv',strat:'Private – Buyout',group:'Long Term',prin:0,nav:0,unf:1000000,dist:0,yield:0.0000,irr:0.0000,dpi:0.00,months:0},
   {name:'Gunung Raja (GGRP)',vintage:2023,ent:'5E',cls:'pub',strat:'Public – Equity',group:'Long Term - GGRP',prin:2645862,nav:6454426,unf:0,dist:0,yield:0.0000,irr:0.0000,dpi:0.00,months:35},
-  {name:'Odin Hills J8',vintage:2025,ent:'KIL',cls:'re',strat:'Real Asset – Property',group:'Real Estate',prin:3095297,nav:3093622,unf:0,dist:0,yield:0.0000,irr:0.0000,dpi:0.00,months:10},
+  {name:'Odin Hills J8',vintage:2025,ent:'KIL',cls:'re',strat:'Real Asset – Property',group:'Real Estate',prin:3093622,nav:3093622,unf:0,dist:0,yield:0.0000,irr:0.0000,dpi:0.00,months:10},
   // ZPP
   {name:'PIMCO GIS Income',    vintage:2025,ent:'ZPP',cls:'pub', strat:'Public – Fixed Inc.',  group:'Short Term',prin:2650000,nav:2851377,unf:0,     dist:0,yield:0.0000,irr:0.0790,dpi:0.00,months:11},
   {name:'Invesco Sr Loan',     vintage:2025,ent:'ZPP',cls:'pub', strat:'Public – Fixed Inc.',  group:'Short Term',prin:2750000,nav:2819479,unf:0,     dist:0,yield:0.0000,irr:0.0263,dpi:0.00,months:11},
@@ -1826,15 +1903,15 @@ const periodSnapshots = {
   {name:'KKR Income Trust',    vintage:2025,ent:'ZPP',cls:'priv',strat:'Private – Dir. Lend.', group:'Short Term',prin:6200000,nav:6619711,unf:0,     dist:0,yield:0.0000,irr:0.0714,dpi:0.00,months:11},
   {name:'Blackstone BCRED',    vintage:2025,ent:'ZPP',cls:'priv',strat:'Private – Dir. Lend.', group:'Short Term',prin:6000000,nav:6231117,unf:0,     dist:0,yield:0.0000,irr:0.0409,dpi:0.00,months:11},
   {name:'OTIC iCap',           vintage:2025,ent:'ZPP',cls:'priv',strat:'Private – Dir. Lend.', group:'Short Term',prin:6000000,nav:6303517,unf:0,     dist:0,yield:0.0000,irr:0.0537,dpi:0.00,months:11},
-  {name:'BSP Structured Cr. V',vintage:2026,ent:'ZPP',cls:'priv',strat:'Private – Credit',    group:'Long Term', prin:530839, nav:530839, unf:1569161,dist:0,yield:0.0000,irr:0.0000,dpi:0.00,months:0}
+  {name:'BSP Structured Cr. V',vintage:2026,ent:'ZPP',cls:'priv',strat:'Private – Credit',    group:'Long Term', prin:530839, nav:577701, unf:1569161,dist:0,yield:0.0000,irr:0.0000,dpi:0.00,months:0}
 ],
     cashMap:{ALL:6353839,'5E':3238552,ATH:1492638,LPE:1588103,ZPP:34546,KIL:0},
-    fcMap:{ALL:6506075,'5E':206738,ATH:201114,LPE:6032838,ZPP:65385,KIL:0},
-    sbMap:{ALL:27560799,'5E':7242438,ATH:3446501,LPE:15271860,ZPP:1600000,KIL:0},
-    totalAUM: 87598978,
+    fcMap:{ALL:6433956,'5E':206738,ATH:207579,LPE:6032838,ZPP:-13199,KIL:0},
+    sbMap:{ALL:27482214,'5E':7242438,ATH:3446501,LPE:15271860,ZPP:1521415,KIL:0},
+    totalAUM: 87646840,
     cashVals:[126557,126557,3238552,3238552,4086017,3888071,3884653,3883022,3338239,3329930,3329634,2825972,3238552],
     standbyFunds:[
-  {name:'LL_FD',             ent:'ZPP', strat:'Liquid Fund',          group:'Short Term', val:1600000},
+  {name:'LL_FD',             ent:'ZPP', strat:'Liquid Fund',          group:'Short Term', val:1521415},
   {name:'INVESCO Sr Loan',   ent:'5E',  strat:'Public – Fixed Inc.',  group:'Short Term', val:2938516.18},
   {name:'KKR Income Trust',  ent:'5E',  strat:'Private – Dir. Lend.', group:'Short Term', val:4303921.39},
   {name:'AMH_FD',            ent:'ATH', strat:'Liquid Fund',           group:'Short Term', val:3446501.07},
@@ -1848,20 +1925,79 @@ const periodSnapshots = {
 ],
     fcCards:{
       fc5e:[{label:'Cash/FD',sign:'+',val:3238552},{label:'Standby Funds',sign:'+',val:7242438},{label:'Unfunded Commitments',sign:'−',val:10115330},{label:'Expenses Forecast',sign:'−',val:158922},{label:'Free Cash',sign:'=',val:206738}],
-      fcAth:[{label:'Cash/FD',sign:'+',val:1492638},{label:'Standby Funds',sign:'+',val:3446501},{label:'Unfunded (KT portion)',sign:'−',val:4225899},{label:'Expenses Forecast',sign:'−',val:12126},{label:'Settlement to 5E',sign:'−',val:500000},{label:'Free Cash',sign:'=',val:201114}],
+      fcAth:[{label:'Cash/FD',sign:'+',val:1492638},{label:'Standby Funds',sign:'+',val:3446501},{label:'Unfunded (KT portion)',sign:'−',val:4225899},{label:'Expenses Forecast',sign:'−',val:5661},{label:'Settlement to 5E',sign:'−',val:500000},{label:'Free Cash',sign:'=',val:207579}],
       fcLpe:[{label:'Cash/FD',sign:'+',val:1588103},{label:'Standby Funds',sign:'+',val:15271860},{label:'Unfunded Commitments',sign:'−',val:10186402},{label:'Expenses Forecast',sign:'−',val:640724},{label:'Free Cash',sign:'=',val:6032838}],
-      fcZpp:[{label:'Cash/FD',sign:'+',val:34546},{label:'Standby Funds',sign:'+',val:1600000},{label:'Unfunded Commitments',sign:'−',val:1569161},{label:'Free Cash',sign:'=',val:65385}]
+      fcZpp:[{label:'Cash/FD',sign:'+',val:34546},{label:'Standby Funds',sign:'+',val:1521415},{label:'Unfunded Commitments',sign:'−',val:1569161},{label:'Free Cash',sign:'=',val:-13199}]
     },
     entityMeta: null,
   },
 
   '2026-02': { label:'Feb 2026', caption:'February 2026',
-    returnData:null, investments:null, cashMap:null, fcMap:null,
-    sbByEnt:null, sbMap:null, entityMeta:null },
+    returnData:[
+  {name:'INVESCO Sr Loan (5EC)',vintage:2025,ent:'5E',group:'Short Term',strat:'Public – Fixed Inc.',prin:2800000,navDec:2938516,navJan:2924584,yld:0.0521,mthDiv:0,ytdDiv:0,cumDist:0,janRet:-10640,capitalCall:0},
+  {name:'KKR Income Trust (5EC)',vintage:2025,ent:'5E',group:'Short Term',strat:'Private – Dir. Lend.',prin:4100000,navDec:4303921,navJan:4327982,yld:0.0648,mthDiv:0,ytdDiv:0,cumDist:0,janRet:36091,capitalCall:0},
+  {name:'TIFF Diversifying (DSF)',vintage:2025,ent:'ATH',group:'Short Term',strat:'Alternatives – Hedge',prin:2000000,navDec:2112196,navJan:2149931,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:11505,capitalCall:0},
+  {name:'QRT Torus (via TIFF)',vintage:2025,ent:'ATH',group:'Short Term',strat:'Alternatives – Hedge',prin:2000000,navDec:2100876,navJan:2256148,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:2264,capitalCall:0},
+  {name:'PIMCO GIS Income',vintage:2025,ent:'LPE',group:'Short Term',strat:'Public – Fixed Inc.',prin:2598436,navDec:2606571,navJan:2621740,yld:0.0601,mthDiv:13134,ytdDiv:26268,cumDist:101052,janRet:13134,capitalCall:0},
+  {name:'JPM Income Fund',vintage:2025,ent:'LPE',group:'Short Term',strat:'Public – Fixed Inc.',prin:2591966,navDec:2565726,navJan:2565726,yld:0.0619,mthDiv:13225,ytdDiv:26451,cumDist:88618,janRet:6612,capitalCall:0},
+  {name:'M&G Float Rate HY',vintage:2025,ent:'LPE',group:'Short Term',strat:'Public – Fixed Inc.',prin:1291570,navDec:1251728,navJan:1242370,yld:0.0663,mthDiv:6865,ytdDiv:14357,cumDist:63368,janRet:1226,capitalCall:0},
+  {name:'Invesco Sr Loan (LPE)',vintage:2025,ent:'LPE',group:'Short Term',strat:'Public – Fixed Inc.',prin:1993742,navDec:1932916,navJan:1911308,yld:0.0787,mthDiv:12527,ytdDiv:24711,cumDist:78465,janRet:-7163,capitalCall:0},
+  {name:'KKR Income Trust (LPE)',vintage:2025,ent:'LPE',group:'Short Term',strat:'Private – Dir. Lend.',prin:3000000,navDec:2970021,navJan:2964100,yld:0.0959,mthDiv:23684,ytdDiv:47369,cumDist:94737,janRet:24868,capitalCall:0},
+  {name:'Blackstone BCRED-iCap',vintage:2025,ent:'LPE',group:'Short Term',strat:'Private – Dir. Lend.',prin:2000000,navDec:1960771,navJan:1954642,yld:0.0839,mthDiv:13658,ytdDiv:27318,cumDist:56177,janRet:7838,capitalCall:0},
+  {name:'OTIC iCap',vintage:2025,ent:'LPE',group:'Short Term',strat:'Private – Dir. Lend.',prin:2000000,navDec:1984127,navJan:1980331,yld:0.0741,mthDiv:12228,ytdDiv:24413,cumDist:49742,janRet:12186,capitalCall:0},
+  {name:'MSA Venture III',vintage:2021,ent:'5E',group:'Long Term',strat:'Private – VC',prin:899729,navDec:883857,navJan:883857,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0,capitalCall:0},
+  {name:'NB Credit Opp. II',vintage:2021,ent:'5E',group:'Long Term',strat:'Private – Credit',prin:630355,navDec:980467,navJan:944874,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0,capitalCall:0,recallableDist:35593},
+  {name:'Lexington Cap. X',vintage:2022,ent:'5E',group:'Long Term',strat:'Private – Secondary',prin:2494493,navDec:3506069,navJan:3463666,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0,capitalCall:0,recallableDist:42403},
+  {name:'Colbeck Strat. III',vintage:2023,ent:'5E',group:'Long Term',strat:'Private – Credit',prin:2111288,navDec:1753022,navJan:2242465,yld:0.0537,mthDiv:0,ytdDiv:0,cumDist:116155,janRet:0,capitalCall:489443},
+  {name:'PSG Equity VI',vintage:2024,ent:'5E',group:'Long Term',strat:'Private – Buyout',prin:1160252,navDec:1196535,navJan:1196535,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0,capitalCall:0},
+  {name:'Gunung Raja (GGRP)',vintage:2023,ent:'5E',group:'Long Term - GGRP',strat:'Public – Equity',prin:2645862,navDec:6454426,navJan:6853217,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:95964,capitalCall:0},
+  {name:'BlueMark (ATH)',vintage:2023,ent:'ATH',group:'Long Term',strat:'Direct Co-Investment',prin:500000,navDec:500000,navJan:500000,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0,capitalCall:0},
+  {name:'Thrive (ATH)',vintage:2024,ent:'ATH',group:'Long Term',strat:'Direct Co-Investment',prin:250000,navDec:250000,navJan:250000,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0,capitalCall:0},
+  {name:'Asia Heritage (ATH)',vintage:2024,ent:'ATH',group:'Long Term',strat:'Direct Co-Investment',prin:250000,navDec:250000,navJan:250000,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0,capitalCall:0},
+  {name:'Bonaccord Cap. II',vintage:2024,ent:'ATH',group:'Long Term',strat:'Private – GP Stakes',prin:1411495,navDec:2717504,navJan:2697644,yld:0.0132,mthDiv:0,ytdDiv:0,cumDist:34720,janRet:0,capitalCall:0,recallableDist:19860},
+  {name:'CF PE Co-Inv. V',vintage:2025,ent:'ATH',group:'Long Term',strat:'Private – Buyout',prin:200000,navDec:200000,navJan:200000,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0,capitalCall:0},
+  {name:'Clearlake Cap. VIII',vintage:2024,ent:'LPE',group:'Long Term',strat:'Private – Buyout',prin:849744,navDec:721344,navJan:721344,yld:0.0000,mthDiv:0,ytdDiv:908,cumDist:908,janRet:908,capitalCall:0},
+  {name:'Galvanize Innov. I',vintage:2022,ent:'LPE',group:'Long Term',strat:'Private – Climate VC',prin:492413,navDec:465412,navJan:465412,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0,capitalCall:0},
+  {name:'Thoma Bravo XVI-A',vintage:2025,ent:'LPE',group:'Long Term',strat:'Private – Buyout',prin:471442,navDec:459850,navJan:459850,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0,capitalCall:0},
+  {name:'CA Select Co-Inv. (LPE)',vintage:2024,ent:'LPE',group:'Long Term',strat:'Private – Buyout',prin:0,navDec:0,navJan:0,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0,capitalCall:0},
+  {name:'Odin Hills J8',vintage:2025,ent:'KIL',group:'Real Estate',strat:'Real Asset – Property',prin:3093622,navDec:3093622,navJan:3093622,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:0,capitalCall:0},
+  {name:'PIMCO GIS Income',vintage:2025,ent:'ZPP',group:'Short Term',strat:'Public – Fixed Inc.',prin:2650000,navDec:2851377,navJan:2883347,yld:0.0760,mthDiv:0,ytdDiv:0,cumDist:0,janRet:15986,capitalCall:0},
+  {name:'Invesco Sr Loan',vintage:2025,ent:'ZPP',group:'Short Term',strat:'Public – Fixed Inc.',prin:2750000,navDec:2819479,navJan:2806110,yld:0.0253,mthDiv:0,ytdDiv:0,cumDist:0,janRet:-10208,capitalCall:0},
+  {name:'JPM Income Fund',vintage:2025,ent:'ZPP',group:'Short Term',strat:'Public – Fixed Inc.',prin:2750000,navDec:2884233,navJan:2899131,yld:0.0488,mthDiv:0,ytdDiv:0,cumDist:0,janRet:5959,capitalCall:0},
+  {name:'FTIF Franklin HY',vintage:2025,ent:'ZPP',group:'Short Term',strat:'Public – Fixed Inc.',prin:2750000,navDec:2920928,navJan:2930143,yld:0.0622,mthDiv:0,ytdDiv:0,cumDist:0,janRet:14973,capitalCall:0},
+  {name:'KKR Income Trust',vintage:2025,ent:'ZPP',group:'Short Term',strat:'Private – Dir. Lend.',prin:6200000,navDec:6619711,navJan:6656718,yld:0.0677,mthDiv:0,ytdDiv:0,cumDist:0,janRet:55511,capitalCall:0},
+  {name:'Blackstone BCRED',vintage:2025,ent:'ZPP',group:'Short Term',strat:'Private – Dir. Lend.',prin:6000000,navDec:6231117,navJan:6255042,yld:0.0385,mthDiv:0,ytdDiv:0,cumDist:0,janRet:24738,capitalCall:0},
+  {name:'OTIC iCap',vintage:2025,ent:'ZPP',group:'Short Term',strat:'Private – Dir. Lend.',prin:6000000,navDec:6303517,navJan:6330305,yld:0.0506,mthDiv:0,ytdDiv:0,cumDist:0,janRet:38477,capitalCall:0},
+  {name:'BSP Structured Cr. V',vintage:2026,ent:'ZPP',group:'Long Term',strat:'Private – Credit',prin:530839,navDec:577701,navJan:577701,yld:0.0000,mthDiv:0,ytdDiv:0,cumDist:0,janRet:46862,capitalCall:0}
+],
+    investments:null,
+    cashMap:{ALL:6049316,'5E':2825972,ATH:1511696,LPE:1682516,ZPP:29133,KIL:0},
+    fcMap:{ALL:6507380,'5E':215733,ATH:210509,LPE:6095608,ZPP:-14470,KIL:0},
+    sbMap:{ALL:27474244,'5E':7252566,ATH:3455903,LPE:15240217,ZPP:1525558,KIL:0},
+    standbyFunds:[
+  {name:'LL_FD',             ent:'ZPP', strat:'Liquid Fund',          group:'Short Term', val:1525558},
+  {name:'INVESCO Sr Loan',   ent:'5E',  strat:'Public – Fixed Inc.',  group:'Short Term', val:2924583.56},
+  {name:'KKR Income Trust',  ent:'5E',  strat:'Private – Dir. Lend.', group:'Short Term', val:4327982.45},
+  {name:'AMH_FD',            ent:'ATH', strat:'Liquid Fund',           group:'Short Term', val:3455903},
+  {name:'PIMCO GIS Income',  ent:'LPE', strat:'Public – Fixed Inc.',  group:'Short Term', val:2621739.72},
+  {name:'JPM Income Fund',   ent:'LPE', strat:'Public – Fixed Inc.',  group:'Short Term', val:2565726.22},
+  {name:'M&G Float Rate HY', ent:'LPE', strat:'Public – Fixed Inc.',  group:'Short Term', val:1242370.33},
+  {name:'Invesco Sr Loan',   ent:'LPE', strat:'Public – Fixed Inc.',  group:'Short Term', val:1911308.35},
+  {name:'KKR Income Trust',  ent:'LPE', strat:'Private – Dir. Lend.', group:'Short Term', val:2964099.91},
+  {name:'Blackstone BCRED',  ent:'LPE', strat:'Private – Dir. Lend.', group:'Short Term', val:1954641.57},
+  {name:'OTIC iCap',         ent:'LPE', strat:'Private – Dir. Lend.', group:'Short Term', val:1980331.27},
+],
+    fcCards:{
+      fc5e:[{label:'Cash/FD',sign:'+',val:2825972},{label:'Standby Funds',sign:'+',val:7252566},{label:'Unfunded Commitments',sign:'−',val:10103883},{label:'Expenses Forecast',sign:'−',val:158922},{label:'Settlement to 5E',sign:'−',val:0},{label:'Free Cash',sign:'=',val:215733}],
+      fcAth:[{label:'Cash/FD',sign:'+',val:1511696},{label:'Standby Funds',sign:'+',val:3455903},{label:'Unfunded (KT portion)',sign:'−',val:4244965},{label:'Expenses Forecast',sign:'−',val:12126},{label:'Settlement to 5E',sign:'−',val:500000},{label:'Free Cash',sign:'=',val:210509}],
+      fcLpe:[{label:'Cash/FD',sign:'+',val:1682516},{label:'Standby Funds',sign:'+',val:15271860},{label:'Unfunded Commitments',sign:'−',val:10186402},{label:'Expenses Forecast',sign:'−',val:640724},{label:'Free Cash',sign:'=',val:6095608}],
+      fcZpp:[{label:'Cash/FD',sign:'+',val:29133},{label:'Standby Funds',sign:'+',val:1525558},{label:'Unfunded Commitments',sign:'−',val:1569161},{label:'Free Cash',sign:'=',val:-14470}]
+    },
+    sbByEnt:null, entityMeta:null },
 
 };
 
-let activePeriod = '2026-02';
+let activePeriod = '2026-03';
 let activeCashMap, activeFcMap, activeSbMap, activeTotalAUM, activeFcCards, activeStandbyFunds;
 
 function setPeriod(key) {
@@ -1905,9 +2041,31 @@ function showSection(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('section-'+id).classList.add('active');
-  const btn = document.querySelector(`.nav-btn[onclick*="${id}"]`);
+  const btn = document.querySelector('.nav-btn[onclick*="'+id+'"]');
   if (btn) btn.classList.add('active');
   if (id === 'contacts') renderContacts();
+
+  // Real Estate tab: lock to KIL, disable all other entity pills
+  const pills = document.querySelectorAll('.entity-pill');
+  if (id === 'realestate') {
+    pills.forEach(function(p) {
+      const oc = p.getAttribute('onclick') || '';
+      const isKil = oc.indexOf("'KIL'") >= 0;
+      if (isKil) {
+        p.click();
+      } else {
+        p.style.opacity = '0.25';
+        p.style.pointerEvents = 'none';
+        p.style.cursor = 'default';
+      }
+    });
+  } else {
+    pills.forEach(function(p) {
+      p.style.opacity = '';
+      p.style.pointerEvents = '';
+      p.style.cursor = '';
+    });
+  }
 }
 
 // ─── COLOUR PALETTE ─────────────────────────────────────────────
@@ -2053,10 +2211,10 @@ const investments = [
   // yield = ann. income return; irr = ann. total return from cost basis; dpi = distributions/paid-in (0 = unrealised); months = holding months
   {name:'INVESCO Sr Loan (5EC)', vintage:2025,   ent:'5E',  cls:'pub',  strat:'Public – Fixed Inc.',  group:'Short Term', prin:2800000,   nav:2924584,   unf:0,       dist:0,        yield:0.0000, irr:0.0521, dpi:0.00, months:10},
   {name:'KKR Income Trust (5EC)', vintage:2025,  ent:'5E',  cls:'priv', strat:'Private – Dir. Lend.', group:'Short Term', prin:4100000,   nav:4327982,   unf:0,       dist:0,        yield:0.0000, irr:0.0648, dpi:0.00, months:10},
-  {name:'MSA Venture III', vintage:2021,         ent:'5E',  cls:'priv', strat:'Private – VC',          group:'Long Term',  prin:899729,    nav:912056,    unf:100271,  dist:0,        yield:0.0, irr:0.0044, dpi:0.0, months:42},
-  {name:'NB Credit Opp. II', vintage:2021,       ent:'5E',  cls:'priv', strat:'Private – Credit',     group:'Long Term',  prin:630355,    nav:931897,    unf:369645,  dist:400232,   yield:0.0000, irr:0.1187, dpi:0.6349, months:33},
+  {name:'MSA Venture III', vintage:2021,         ent:'5E',  cls:'priv', strat:'Private – VC',          group:'Long Term',  prin:899729,    nav:883857,    unf:100271,  dist:0,        yield:0.0, irr:0.0044, dpi:0.0, months:42},
+  {name:'NB Credit Opp. II', vintage:2021,       ent:'5E',  cls:'priv', strat:'Private – Credit',     group:'Long Term',  prin:630355,    nav:944874,    unf:369645,  dist:400232,   yield:0.0000, irr:0.1187, dpi:0.6349, months:33},
   {name:'Lexington Cap. X', vintage:2022,        ent:'5E',  cls:'priv', strat:'Private – Secondary',  group:'Long Term',  prin:2494493,   nav:3463666,   unf:2505507, dist:451940,   yield:0.0000, irr:0.1924, dpi:0.1812, months:25},
-  {name:'Colbeck Strat. III', vintage:2023,      ent:'5E',  cls:'priv', strat:'Private – Credit',     group:'Long Term',  prin:2111288,   nav:2250704,   unf:2888712, dist:517195,   yield:0.0388, irr:0.099, dpi:0.245, months:17},
+  {name:'Colbeck Strat. III', vintage:2023,      ent:'5E',  cls:'priv', strat:'Private – Credit',     group:'Long Term',  prin:2111288,   nav:2242465,   unf:2888712, dist:517195,   yield:0.0388, irr:0.099, dpi:0.245, months:17},
   {name:'PSG Equity VI', vintage:2024,           ent:'5E',  cls:'priv', strat:'Private – Buyout',     group:'Long Term',  prin:1160252,   nav:1067315,   unf:3839748, dist:123916,   yield:0.0,irr:-0.1513,dpi:0.1068, months:9},
   {name:'BlueMark (ATH)', vintage:2023,          ent:'ATH', cls:'co',   strat:'Direct Co-Investment', group:'Long Term',  prin:500000,    nav:500000,    unf:0,       dist:0,        yield:0.0000, irr:0.0000, dpi:0.00, months:26},
   {name:'Thrive (ATH)', vintage:2024,            ent:'ATH', cls:'co',   strat:'Direct Co-Investment', group:'Long Term',  prin:250000,    nav:250000,    unf:0,       dist:0,        yield:0.0000, irr:0.0000, dpi:0.00, months:25},
@@ -2072,12 +2230,12 @@ const investments = [
   {name:'KKR Income Trust (LPE)', vintage:2025,  ent:'LPE', cls:'priv', strat:'Private – Dir. Lend.', group:'Short Term', prin:3000000,   nav:2964100,   unf:0,       dist:94737,    yield:0.0959, irr:0.0371, dpi:0.0316, months:6},
   {name:'Blackstone BCRED-iCap', vintage:2025,   ent:'LPE', cls:'priv', strat:'Private – Dir. Lend.', group:'Short Term', prin:2000000,   nav:1954642,   unf:0,       dist:56177,    yield:0.0839, irr:0.0104, dpi:0.0281, months:6},
   {name:'OTIC iCap', vintage:2025,               ent:'LPE', cls:'priv', strat:'Private – Dir. Lend.', group:'Short Term', prin:2000000,   nav:1980331,   unf:0,       dist:49742,    yield:0.0741, irr:0.0289, dpi:0.0249, months:6},
-  {name:'Clearlake Cap. VIII', vintage:2024,     ent:'LPE', cls:'priv', strat:'Private – Buyout',     group:'Long Term',  prin:849744,    nav:751565,    unf:4150257, dist:883,        yield:0.00,irr:-0.4182,dpi:0.0011, months:5},
+  {name:'Clearlake Cap. VIII', vintage:2024,     ent:'LPE', cls:'priv', strat:'Private – Buyout',     group:'Long Term',  prin:849744,    nav:721344,    unf:4150257, dist:883,        yield:0.00,irr:-0.4182,dpi:0.0011, months:5},
   {name:'Galvanize Innov. I', vintage:2022,      ent:'LPE', cls:'priv', strat:'Private – Climate VC', group:'Long Term',  prin:492413,    nav:465412,    unf:507587,  dist:17,        yield:0.0000, irr:-0.1618,dpi:0.0, months:4},
   {name:'Thoma Bravo XVI-A', vintage:2025,       ent:'LPE', cls:'priv', strat:'Private – Buyout',     group:'Long Term',  prin:471442,    nav:459850,    unf:4528558, dist:0,        yield:0.0000, irr:-0.117, dpi:0.0, months:2},
   {name:'CA Select Co-Inv. (LPE)', vintage:2024, ent:'LPE', cls:'priv', strat:'Private – Buyout',     group:'Long Term',  prin:0,         nav:0,         unf:1000000, dist:0,        yield:0.0000, irr:0.0000, dpi:0.00, months:0},
   {name:'Gunung Raja (GGRP)', vintage:2023,      ent:'5E',  cls:'pub',  strat:'Public – Equity',      group:'Long Term - GGRP',  prin:2645862,   nav:6853217,   unf:0,       dist:0,        yield:null, irr:null,   dpi:0.00, months:35},
-  {name:'Odin Hills J8', vintage:2025,           ent:'KIL', cls:'re',   strat:'Real Asset – Property',group:'Real Estate',prin:3095297,   nav:3095297,   unf:0,       dist:0,        yield:0.0000, irr:0.0000, dpi:0.00, months:10},
+  {name:'Odin Hills J8', vintage:2025,           ent:'KIL', cls:'re',   strat:'Real Asset – Property',group:'Real Estate',prin:3093622,   nav:3093622,   unf:0,       dist:0,        yield:0.0000, irr:0.0000, dpi:0.00, months:10},
 ,
   // ZPP
   {name:'PIMCO GIS Income',    vintage:2025,ent:'ZPP',cls:'pub', strat:'Public – Fixed Inc.',  group:'Short Term',prin:2650000,nav:2883347,unf:0,     dist:0,yield:0.0000,irr:0.0848,dpi:0.00,months:12},
@@ -2087,7 +2245,7 @@ const investments = [
   {name:'KKR Income Trust',    vintage:2025,ent:'ZPP',cls:'priv',strat:'Private – Dir. Lend.', group:'Short Term',prin:6200000,nav:6656718,unf:0,     dist:0,yield:0.0000,irr:0.0719,dpi:0.00,months:12},
   {name:'Blackstone BCRED',    vintage:2025,ent:'ZPP',cls:'priv',strat:'Private – Dir. Lend.', group:'Short Term',prin:6000000,nav:6255042,unf:0,     dist:0,yield:0.0000,irr:0.0417,dpi:0.00,months:12},
   {name:'OTIC iCap',           vintage:2025,ent:'ZPP',cls:'priv',strat:'Private – Dir. Lend.', group:'Short Term',prin:6000000,nav:6330305,unf:0,     dist:0,yield:0.0000,irr:0.0540,dpi:0.00,months:12},
-  {name:'BSP Structured Cr. V',vintage:2026,ent:'ZPP',cls:'priv',strat:'Private – Credit',    group:'Long Term', prin:530839, nav:530839, unf:1569161,dist:0,yield:0.0000,irr:0.0000,dpi:0.00,months:1}];
+  {name:'BSP Structured Cr. V',vintage:2026,ent:'ZPP',cls:'priv',strat:'Private – Credit',    group:'Long Term', prin:530839, nav:577701, unf:1569161,dist:0,yield:0.0000,irr:0.0000,dpi:0.00,months:1}];
 
 const totalNAV = investments.filter(d=>d.prin>0).reduce((a,d)=>a+d.nav,0);
 
@@ -2165,9 +2323,9 @@ function renderPortfolioTable() {
 
 // ─── RENDER WATERFALL ───────────────────────────────────────────
 function renderWaterfall() {
-  const cMap = activeCashMap || (periodSnapshots['2026-02'] && periodSnapshots['2026-02'].cashMap) || {ALL:6049316};
-  const sbM  = activeSbMap   || (periodSnapshots['2026-02'] && periodSnapshots['2026-02'].sbMap)   || {ALL:27548686};
-  const fcM  = activeFcMap   || (periodSnapshots['2026-02'] && periodSnapshots['2026-02'].fcMap)   || {ALL:6600886};
+  const cMap = activeCashMap || (periodSnapshots['2026-03'] && periodSnapshots['2026-03'].cashMap) || {ALL:6049316};
+  const sbM  = activeSbMap   || (periodSnapshots['2026-03'] && periodSnapshots['2026-03'].sbMap)   || {ALL:27548686};
+  const fcM  = activeFcMap   || (periodSnapshots['2026-03'] && periodSnapshots['2026-03'].fcMap)   || {ALL:6600886};
   const fc   = activeFcCards || {};
   const inv  = getInv();
   const unfKT_5E  = inv.filter(d=>d.ent==='5E').reduce((a,d)=>a+(d.unf||0),0);
@@ -2176,7 +2334,7 @@ function renderWaterfall() {
   const unfKT_ALL = unfKT_5E + unfKT_ATH + unfKT_LPE;
   const totalAvail = cMap.ALL + sbM.ALL;
   const _wfSnap = periodSnapshots[activePeriod] || {};
-  const _expMapWf = _wfSnap.expenses || {ALL:811772,'5E':158922,ATH:512126,LPE:640724,ZPP:0};
+  const _expMapWf = _wfSnap.expenses || {ALL:305457,'5E':158922,ATH:5661,LPE:640724,ZPP:0};
   const expAll = _expMapWf.ALL || 811772;
   const settle = _wfSnap.settlement || 500000;
 
@@ -2285,8 +2443,9 @@ function renderExpenses() {
 
 function updateKILSummaryKPI() {
   const isJan = activePeriod === '2026-01';
-  const spent     = isJan ? 3093622 : 3095297;
-  const remaining = isJan ? 2072030 : 2070355;
+  const isMar26   = activePeriod === '2026-03';
+  const spent     = isMar26 ? 3097199 : 3093622;
+  const remaining = isMar26 ? 2068453 : 2072030;
   const budget    = 5165652;
   const util      = (spent / budget * 100).toFixed(1);
   const spentM    = (spent / 1e6).toFixed(3) + 'M';
@@ -2306,18 +2465,24 @@ function updateKILSummaryKPI() {
     remEl.querySelector('.kpi-value').innerHTML =
       '<span class="currency">$</span>' + remM;
   }
+  // Update NAV KPI (= cumulative spend)
+  const navEl = document.getElementById('kilNavKpi');
+  if (navEl) {
+    navEl.querySelector('.kpi-value').innerHTML =
+      '<span class="currency">$</span>' + (spent/1e6).toFixed(3) + 'M';
+  }
 }
 function renderKILGauges() {
-  const isJan = activePeriod === '2026-01';
+  const isMar = activePeriod === '2026-03';
   const data = [
-    {name:'Land Purchase',    bud:1737968, act:1806005},
-    {name:'PM Fees',          bud:929144,  act:565627},
-    {name:'Construction',     bud:2339572, act:676837},
-    {name:'Title Reg.',       bud:3041,    act:3084},
-    {name:'Kazoku Set-Up',    bud:3625,    act:isJan ? 3075 : 4750},
-    {name:'Legal Fees',       bud:46415,   act:34847},
-    {name:'Taxes',            bud:96215,   act:283},
-    {name:'Other',            bud:9671,    act:3865},
+    {name:'Land Purchase',  bud:1737968, act:1806005},
+    {name:'PM Fees',        bud:929144,  act:565627},
+    {name:'Construction',   bud:2339572, act:676837},
+    {name:'Title Reg.',     bud:3041,    act:3084},
+    {name:'Kazoku Set-Up',  bud:3625,    act:isMar ? 4750 : 3075},
+    {name:'Legal Fees',     bud:46415,   act:34847},
+    {name:'Taxes',          bud:96215,   act:isMar ? 2185 : 283},
+    {name:'Other',          bud:9671,    act:3865},
   ];
   const el = document.getElementById('kilGauges');
   if (!el) return;
@@ -2347,7 +2512,17 @@ function renderKILGauges() {
 
 // ─── KIL EXPENSE FORECAST TABLE ─────────────────────────────────
 function renderKILExpForecast() {
-  const rows = [
+  const isMar = activePeriod === '2026-03';
+  const rows = isMar ? [
+    // Forecast Mar 2026: Mar expenses shifted to Apr
+    {cat:'PM Fees',       m:[0,0,0,0,185829,0,0,92914,0,0,0,0]},
+    {cat:'Construction',  m:[0,0,0,467914,350936,0,0,350936,0,350936,0,0]},
+    {cat:'Title Reg.',    m:[0,0,0,33,0,0,0,0,0,0,0,0]},
+    {cat:'Legal Fees',    m:[0,0,0,1337,0,0,0,0,0,0,0,0]},
+    {cat:'Taxes',         m:[0,0,0,0,0,0,0,0,0,0,91979,0]},
+    {cat:'Other Fees',    m:[0,0,0,5294,0,0,0,0,0,0,0,0]},
+  ] : [
+    // Forecast Jan & Feb 2026: Mar expenses in Mar
     {cat:'PM Fees',       m:[0,0,0,0,185829,0,0,92914,0,0,0,0]},
     {cat:'Construction',  m:[0,0,467914,0,350936,0,0,350936,0,350936,0,0]},
     {cat:'Title Reg.',    m:[0,0,33,0,0,0,0,0,0,0,0,0]},
@@ -2390,20 +2565,13 @@ function refreshLiquidity(ent) {
   const isJan = activePeriod === '2026-01';
 
   // ── Period-aware data ─────────────────────────────────────────
-  const cashMap = Object.assign({}, activeCashMap || (periodSnapshots['2026-02'] && periodSnapshots['2026-02'].cashMap) || {ALL:6049316,'5E':2825972,ATH:1511696,LPE:1682516,ZPP:29133,KIL:0});
-  const sbMap   = Object.assign({}, activeSbMap   || (periodSnapshots['2026-02'] && periodSnapshots['2026-02'].sbMap)   || {ALL:27548686,'5E':7252566,ATH:3455903,LPE:15240217,ZPP:1600000,KIL:0});
-  const fcMap   = Object.assign({}, activeFcMap   || (periodSnapshots['2026-02'] && periodSnapshots['2026-02'].fcMap)   || {ALL:6600886,'5E':215733,ATH:229574,LPE:6095608,ZPP:59972,KIL:0});
+  const cashMap = Object.assign({}, activeCashMap || (periodSnapshots['2026-03'] && periodSnapshots['2026-03'].cashMap) || {ALL:6049316,'5E':2825972,ATH:1511696,LPE:1682516,ZPP:29133,KIL:0});
+  const sbMap   = Object.assign({}, activeSbMap   || (periodSnapshots['2026-03'] && periodSnapshots['2026-03'].sbMap)   || {ALL:27474244,'5E':7252566,ATH:3455903,LPE:15240217,ZPP:1525558,KIL:0});
+  // fcMap will be computed dynamically after expMap is calculated below
   // ALLX = ALL minus ZPP
   cashMap.ALLX = (cashMap.ALL||0) - (cashMap.ZPP||0);
   sbMap.ALLX   = (sbMap.ALL||0)   - (sbMap.ZPP||0);
-  fcMap.ALLX   = (fcMap.ALL||0)   - (fcMap.ZPP||0);
   const fc      = activeFcCards || {};
-
-  // ── Rebuild entity free cash cards from active period data ───
-  if (fc.fc5e)  fcCard('fc5e',  fc.fc5e);
-  if (fc.fcAth) fcCard('fcAth', fc.fcAth);
-  if (fc.fcLpe) fcCard('fcLpe', fc.fcLpe);
-  if (fc.fcZpp) fcCard('fcZpp', fc.fcZpp);
 
   // Derived totals
   const avail  = {
@@ -2424,14 +2592,77 @@ function refreshLiquidity(ent) {
     ZPP:  inv.filter(d=>d.ent==='ZPP').reduce((a,d)=>a+(d.unf||0),0),
   };
   unfMap.ALLX = unfMap['5E'] + unfMap.ATH + unfMap.LPE;
-  // Expenses and settlement — read from active period snapshot
+  // Expenses — from 09. Free Cash source, period-specific (now connected to expense forecast table)
+  const _fcExpByPeriod2 = {
+    '2026-01': {'5E':158922,'ATH':12126,'LPE':640724,'ZPP':0},
+    '2026-02': {'5E':158922,'ATH':12126,'LPE':637012,'ZPP':0},
+    '2026-03': {'5E':158922,'ATH':5661, 'LPE':688879,'ZPP':0},
+  };
+  const _fcExpMap2 = _fcExpByPeriod2[activePeriod] || _fcExpByPeriod2['2026-03'];
+  const expMap = {
+    '5E':  _fcExpMap2['5E'],
+    'ATH': _fcExpMap2['ATH'],
+    'LPE': _fcExpMap2['LPE'],
+    'ZPP': _fcExpMap2['ZPP'],
+    'KIL': 0,
+  };
+  expMap.ALL  = expMap['5E'] + expMap.ATH + expMap.LPE + expMap.ZPP;
+  expMap.ALLX = expMap['5E'] + expMap.ATH + expMap.LPE;
   const _snap = periodSnapshots[activePeriod] || {};
-  const expMap = _snap.expenses || {ALL:811772,ALLX:811772,'5E':158922,ATH:512126,LPE:640724,ZPP:0,KIL:0};
   const settlementATH = _snap.settlement || 500000;
+
+  // Compute fcMap dynamically: Cash + Standby - Unfunded - Expenses (- Settlement for ATH)
+  // Need unfunded first — computed below, so use a forward reference via inv
+  const _inv2 = getInv();
+  const _unf5E  = _inv2.filter(d=>d.ent==='5E').reduce((a,d)=>a+(d.unf||0),0);
+  const _unfLPE = _inv2.filter(d=>d.ent==='LPE').reduce((a,d)=>a+(d.unf||0),0);
+  const _unfZPP = _inv2.filter(d=>d.ent==='ZPP').reduce((a,d)=>a+(d.unf||0),0);
+  const _unfATH = (_snap.fcCards && _snap.fcCards.fcAth)
+    ? (_snap.fcCards.fcAth.find(d=>d.label.includes('Unfunded'))||{val:0}).val
+    : _inv2.filter(d=>d.ent==='ATH').reduce((a,d)=>a+(d.unf||0),0);
+  const fcMap = {
+    '5E':  (cashMap['5E']||0) + (sbMap['5E']||0) - _unf5E  - expMap['5E'],
+    'ATH': (cashMap.ATH||0)  + (sbMap.ATH||0)  - _unfATH - expMap.ATH - settlementATH,
+    'LPE': (cashMap.LPE||0)  + (sbMap.LPE||0)  - _unfLPE - expMap.LPE,
+    'ZPP': (cashMap.ZPP||0)  + (sbMap.ZPP||0)  - _unfZPP - expMap.ZPP,
+    'KIL': 0,
+  };
+  fcMap.ALL  = fcMap['5E'] + fcMap.ATH + fcMap.LPE + fcMap.ZPP;
+  fcMap.ALLX = (cashMap.ALLX||0) + (sbMap.ALLX||0) - (_unf5E+_unfATH+_unfLPE) - (expMap['5E']+expMap.ATH+expMap.LPE) - settlementATH;
   // KT unfunded (ATH only — from fcCards if available)
   const athUnfKT = fc.fcAth ? (fc.fcAth.find(d=>d.label.includes('Unfunded'))||{val:unfMap.ATH}).val : unfMap.ATH;
   // ALL unfunded KT = 5E + ATH_KT + LPE + ZPP
   const unfKT_ALL = unfMap['5E'] + athUnfKT + unfMap.LPE + (unfMap.ZPP||0);
+
+  // ── Rebuild entity free cash cards dynamically using period-aware expMap ───
+  fcCard('fc5e', [
+    {label:'Cash/FD',               sign:'+', val:cashMap['5E']||0},
+    {label:'Standby Funds',         sign:'+', val:sbMap['5E']||0},
+    {label:'Unfunded Commitments',  sign:'−', val:_unf5E},
+    {label:'Expenses Forecast',     sign:'−', val:expMap['5E']},
+    {label:'Free Cash',             sign:'=', val:fcMap['5E']},
+  ]);
+  fcCard('fcAth', [
+    {label:'Cash/FD',                   sign:'+', val:cashMap.ATH||0},
+    {label:'Standby Funds (AMH_FD)',    sign:'+', val:sbMap.ATH||0},
+    {label:'Unfunded (KT portion)',     sign:'−', val:_unfATH},
+    {label:'Expenses Forecast',         sign:'−', val:expMap.ATH},
+    {label:'Settlement to 5E',          sign:'−', val:settlementATH},
+    {label:'Free Cash',                 sign:'=', val:fcMap.ATH},
+  ]);
+  fcCard('fcLpe', [
+    {label:'Cash/FD',               sign:'+', val:cashMap.LPE||0},
+    {label:'Standby Funds',         sign:'+', val:sbMap.LPE||0},
+    {label:'Unfunded Commitments',  sign:'−', val:_unfLPE},
+    {label:'Expenses Forecast',     sign:'−', val:expMap.LPE},
+    {label:'Free Cash',             sign:'=', val:fcMap.LPE},
+  ]);
+  fcCard('fcZpp', [
+    {label:'Cash/FD',               sign:'+', val:cashMap.ZPP||0},
+    {label:'Standby Funds',         sign:'+', val:sbMap.ZPP||0},
+    {label:'Unfunded Commitments',  sign:'−', val:_unfZPP},
+    {label:'Free Cash',             sign:'=', val:fcMap.ZPP},
+  ]);
 
   // ── 1. Cash/FD table rows ─────────────────────────────────────
   document.querySelectorAll('#section-liquidity .cash-table tbody tr[data-ent]').forEach(row => {
@@ -2491,7 +2722,7 @@ function refreshLiquidity(ent) {
         {label:'Standby Funds (AMH_FD)',    sign:'+', val:sbMap.ATH,    color:C.blue},
         {label:'Total Available',           sign:'=', val:avail.ATH,    color:C.navy, total:true},
         {label:'Unfunded Commitments (KT)', sign:'−', val:athUnfKT,     color:C.red},
-        {label:'Expenses Forecast 2026',    sign:'−', val:expMap.ATH-settlementATH, color:C.rust},
+        {label:'Expenses Forecast 2026',    sign:'−', val:expMap.ATH, color:C.rust},
         {label:'Settlement to 5E',          sign:'−', val:settlementATH,color:'#c07030'},
         {label:'Total Free Cash',           sign:'=', val:fcMap.ATH,    color:C.green, total:true},
       ]
@@ -2597,6 +2828,7 @@ function refreshLiquidity(ent) {
 // standbyFunds — read from active period snapshot
 function getStandbyFunds() {
   return activeStandbyFunds || [
+  {name:'LL_FD',             ent:'ZPP', strat:'Liquid Fund',           group:'Short Term', val:1525558},
   {name:'INVESCO Sr Loan',   ent:'5E',  strat:'Public – Fixed Inc.',  group:'Short Term', val:2924583.56},
   {name:'KKR Income Trust',  ent:'5E',  strat:'Private – Dir. Lend.', group:'Short Term', val:4327982.45},
   {name:'AMH_FD',            ent:'ATH', strat:'Liquid Fund',           group:'Short Term', val:3455903.38},
@@ -3047,21 +3279,7 @@ function setEntity(ent, btn) {
   // update pills
   document.querySelectorAll('.entity-pill').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  // update banner
-  const banner = document.getElementById('entityBanner');
-  const meta = entityMeta[ent];
-  if (ent === 'ALL' || ent === 'ALLX') {
-    banner.classList.remove('visible');
-  } else {
-    banner.classList.add('visible');
-    document.getElementById('ebName').textContent = meta.name;
-    document.getElementById('ebKpis').innerHTML = meta.kpis.map(k =>
-      `<div class="eb-kpi">
-        <div class="eb-lbl">${k.l}</div>
-        <div class="eb-val ${k.cls}">${k.v}</div>
-      </div>`
-    ).join('');
-  }
+
   // re-render all dynamic content
   refreshAll();
 }
@@ -3083,10 +3301,36 @@ function refreshAll() {
   const tUnf  = inv.reduce((a,d)=>a+d.unf,0);
 
   const cashMap  = Object.assign({}, activeCashMap  || (periodSnapshots['2026-02'].cashMap) || {ALL:6049316,'5E':2825972,ATH:1511696,LPE:1682516,ZPP:29133,KIL:0});
-  const fcMap    = Object.assign({}, activeFcMap    || {ALL:6540914,  '5E':215733,  ATH:229574,  LPE:6095608, KIL:0});
   const sbMap    = Object.assign({}, activeSbMap    || {ALL:25948686, '5E':7252566, ATH:3455903, LPE:15240217, KIL:0});
+  // Compute fcMap dynamically from expForecastData — same logic as refreshLiquidity
+  const _pIdx   = 0; // Always full year total from active forecast version
+  const _expRem = (e) => getExpForecastData().filter(d=>d.ent===e).reduce((s,d)=>s+d.m.reduce((a,v)=>a+v,0),0);
+  // Free Cash uses the expenses as recorded in 09. Free Cash source — full year from Jan/Feb forecast
+  // ATH and LPE Mar forecast updates only affect Due Amount Forecast table, not Free Cash
+  const _fcExpByPeriod = {
+    '2026-01': {'5E':158922,'ATH':12126,'LPE':640724,'ZPP':0},
+    '2026-02': {'5E':158922,'ATH':12126,'LPE':637012,'ZPP':0},
+    '2026-03': {'5E':158922,'ATH':5661, 'LPE':688879,'ZPP':0},
+  };
+  const _fcExpMap = _fcExpByPeriod[activePeriod] || _fcExpByPeriod['2026-03'];
+  const _snap2  = periodSnapshots[activePeriod] || {};
+  const _set2   = _snap2.settlement || 500000;
+  const _inv2   = getInv();
+  const _u5e    = _inv2.filter(d=>d.ent==='5E').reduce((a,d)=>a+(d.unf||0),0);
+  const _ulpe   = _inv2.filter(d=>d.ent==='LPE').reduce((a,d)=>a+(d.unf||0),0);
+  const _uzpp   = _inv2.filter(d=>d.ent==='ZPP').reduce((a,d)=>a+(d.unf||0),0);
+  const _fcAthSnap = _snap2.fcCards && _snap2.fcCards.fcAth;
+  const _uath   = _fcAthSnap ? (_fcAthSnap.find(d=>d.label.includes('Unfunded'))||{val:0}).val : _inv2.filter(d=>d.ent==='ATH').reduce((a,d)=>a+(d.unf||0),0);
+  const fcMap   = {
+    '5E':  (cashMap['5E']||0) + (sbMap['5E']||0) - _u5e  - _fcExpMap['5E'],
+    'ATH': (cashMap.ATH||0)  + (sbMap.ATH||0)  - _uath - _fcExpMap['ATH'] - _set2,
+    'LPE': (cashMap.LPE||0)  + (sbMap.LPE||0)  - _ulpe - _fcExpMap['LPE'],
+    'ZPP': (cashMap.ZPP||0)  + (sbMap.ZPP||0)  - _uzpp - _fcExpMap['ZPP'],
+    'KIL': 0,
+  };
+  fcMap.ALL  = fcMap['5E'] + fcMap.ATH + fcMap.LPE + fcMap.ZPP;
+  fcMap.ALLX = (cashMap['5E']||0)+(cashMap.ATH||0)+(cashMap.LPE||0) + (sbMap['5E']||0)+(sbMap.ATH||0)+(sbMap.LPE||0) - (_u5e+_uath+_ulpe) - (_fcExpMap['5E']+_fcExpMap['ATH']+_fcExpMap['LPE']) - _set2;
   cashMap.ALLX = (cashMap.ALL||0) - (cashMap.ZPP||0);
-  fcMap.ALLX   = (fcMap.ALL||0)   - (fcMap.ZPP||0);
   sbMap.ALLX   = (sbMap.ALL||0)   - (sbMap.ZPP||0);
   const tCash    = cashMap[ent];
   const tFC      = fcMap[ent];
@@ -3170,6 +3414,7 @@ function refreshAll() {
   });
   // Real Estate tab — always refresh KIL data on period change
   renderKILGauges();
+  renderKILExpForecast();
   updateKILSummaryKPI();
 
   // ── Portfolio mini-stats + footer computed columns ─────────
@@ -3357,23 +3602,23 @@ const returnData = [
   {name:'QRT Torus (via TIFF)', vintage:2025,    ent:'ATH', group:'Short Term', strat:'Alternatives – Hedge',  prin:2000000,   navDec:2100876, navJan:2100876, yld:0.0000, mthDiv:0,     cumDist:0, janRet:2264},
   {name:'PIMCO GIS Income', vintage:2025,        ent:'LPE', group:'Short Term', strat:'Public – Fixed Inc.',   prin:2598436,   navDec:2606571, navJan:2621740, yld:0.0601, mthDiv:13134, cumDist:101052, ytdDiv:26268, janRet:13134},
   {name:'JPM Income Fund', vintage:2025,         ent:'LPE', group:'Short Term', strat:'Public – Fixed Inc.',   prin:2591966,   navDec:2565726, navJan:2565726, yld:0.0619, mthDiv:13225, cumDist:88618,  ytdDiv:26451, janRet:6612},
-  {name:'M&G Float Rate HY', vintage:2025,       ent:'LPE', group:'Short Term', strat:'Public – Fixed Inc.',   prin:1291570,   navDec:1251728, navJan:1242370, yld:0.0663, mthDiv:6865,  cumDist:55876,  ytdDiv:14357, janRet:1226},
+  {name:'M&G Float Rate HY', vintage:2025,       ent:'LPE', group:'Short Term', strat:'Public – Fixed Inc.',   prin:1291570,   navDec:1251728, navJan:1242370, yld:0.0663, mthDiv:6865,  cumDist:63368,  ytdDiv:14357, janRet:1226},
   {name:'Invesco Sr Loan (LPE)', vintage:2025,   ent:'LPE', group:'Short Term', strat:'Public – Fixed Inc.',   prin:1993742,   navDec:1932916, navJan:1911308, yld:0.0787, mthDiv:12527, cumDist:78465,  ytdDiv:24711, janRet:-7163},
   {name:'KKR Income Trust (LPE)', vintage:2025,  ent:'LPE', group:'Short Term', strat:'Private – Dir. Lend.',  prin:3000000,   navDec:2970021, navJan:2964100, yld:0.0959, mthDiv:23684, cumDist:94737,  ytdDiv:47369, janRet:24868},
   {name:'Blackstone BCRED-iCap', vintage:2025,   ent:'LPE', group:'Short Term', strat:'Private – Dir. Lend.',  prin:2000000,   navDec:1960771, navJan:1954642, yld:0.0839, mthDiv:13658, cumDist:56177,  ytdDiv:27318, janRet:7838},
   {name:'OTIC iCap', vintage:2025,               ent:'LPE', group:'Short Term', strat:'Private – Dir. Lend.',  prin:2000000,   navDec:1984127, navJan:1980331, yld:0.0741, mthDiv:12228, cumDist:49742,  ytdDiv:24413, janRet:12186},
-  {name:'MSA Venture III', vintage:2021,         ent:'5E',  group:'Long Term',  strat:'Private – VC',          prin:899729,    navDec:912056,  navJan:912056,  yld:0.0000, mthDiv:0,     cumDist:0, janRet:0, capitalCall:0},
-  {name:'NB Credit Opp. II', vintage:2021,       ent:'5E',  group:'Long Term',  strat:'Private – Credit',      prin:630355,    navDec:967490,  navJan:931897,  yld:0.0000, mthDiv:0,     cumDist:0, janRet:0, capitalCall:0},
-  {name:'Lexington Cap. X', vintage:2022,        ent:'5E',  group:'Long Term',  strat:'Private – Secondary',   prin:2494493,   navDec:3506069, navJan:3463666, yld:0.0000, mthDiv:0,     cumDist:0, janRet:-42133, capitalCall:0},
-  {name:'Colbeck Strat. III', vintage:2023,      ent:'5E',  group:'Long Term',  strat:'Private – Credit',      prin:2111288,   navDec:1761261, navJan:2250704, yld:0.0388, mthDiv:0,     cumDist:116155, janRet:0, capitalCall:489443},
-  {name:'PSG Equity VI', vintage:2024,           ent:'5E',  group:'Long Term',  strat:'Private – Buyout',      prin:1160252,   navDec:1067315, navJan:1067315, yld:0.0000, mthDiv:0,     cumDist:0, janRet:0, capitalCall:0},
+  {name:'MSA Venture III', vintage:2021,         ent:'5E',  group:'Long Term',  strat:'Private – VC',          prin:899729,    navDec:883857,  navJan:883857,  yld:0.0000, mthDiv:0,     cumDist:0, janRet:0, capitalCall:0},
+  {name:'NB Credit Opp. II', vintage:2021,       ent:'5E',  group:'Long Term',  strat:'Private – Credit',      prin:630355,    navDec:980467,  navJan:944874,  yld:0.0000, mthDiv:0,     cumDist:0, janRet:0, capitalCall:0,recallableDist:35593},
+  {name:'Lexington Cap. X', vintage:2022,        ent:'5E',  group:'Long Term',  strat:'Private – Secondary',   prin:2494493,   navDec:3506069, navJan:3463666, yld:0.0000, mthDiv:0,     cumDist:0, janRet:0, capitalCall:0,recallableDist:42403},
+  {name:'Colbeck Strat. III', vintage:2023,      ent:'5E',  group:'Long Term',  strat:'Private – Credit',      prin:2111288,   navDec:1753022, navJan:2242465, yld:0.0388, mthDiv:0,     cumDist:116155, janRet:0, capitalCall:489443},
+  {name:'PSG Equity VI', vintage:2024,           ent:'5E',  group:'Long Term',  strat:'Private – Buyout',      prin:1160252,   navDec:1196535, navJan:1196535, yld:0.0000, mthDiv:0,     cumDist:0, janRet:0, capitalCall:0},
   {name:'Gunung Raja (GGRP)', vintage:2023,      ent:'5E',  group:'Long Term - GGRP',  strat:'Public – Equity',       prin:2645862,   navDec:6454426, navJan:6853217, yld:0.0000, mthDiv:0,     cumDist:0, janRet:95964},
   {name:'BlueMark (ATH)', vintage:2023,          ent:'ATH', group:'Long Term',  strat:'Direct Co-Investment',  prin:500000,    navDec:500000,  navJan:500000,  yld:0.0000, mthDiv:0,     cumDist:0, janRet:0},
   {name:'Thrive (ATH)', vintage:2024,            ent:'ATH', group:'Long Term',  strat:'Direct Co-Investment',  prin:250000,    navDec:250000,  navJan:250000,  yld:0.0000, mthDiv:0,     cumDist:0, janRet:0},
   {name:'Asia Heritage (ATH)', vintage:2024,     ent:'ATH', group:'Long Term',  strat:'Direct Co-Investment',  prin:250000,    navDec:250000,  navJan:250000,  yld:0.0000, mthDiv:0,     cumDist:0, janRet:0},
-  {name:'Bonaccord Cap. II', vintage:2024,       ent:'ATH', group:'Long Term',  strat:'Private – GP Stakes',   prin:1411495,   navDec:2717504, navJan:2697644, yld:0.0128, mthDiv:0,     cumDist:34720, janRet:0, capitalCall:0},
+  {name:'Bonaccord Cap. II', vintage:2024,       ent:'ATH', group:'Long Term',  strat:'Private – GP Stakes',   prin:1411495,   navDec:2717504, navJan:2697644, yld:0.0128, mthDiv:0,     cumDist:34720, janRet:0, capitalCall:0,recallableDist:19860},
   {name:'CF PE Co-Inv. V', vintage:2025,         ent:'ATH', group:'Long Term',  strat:'Private – Buyout',      prin:200000,    navDec:200000,  navJan:200000,  yld:0.0000, mthDiv:0,     cumDist:0,     ytdDiv:0, janRet:0, capitalCall:0},
-  {name:'Clearlake Cap. VIII', vintage:2024,     ent:'LPE', group:'Long Term',  strat:'Private – Buyout',      prin:849744,    navDec:751565,  navJan:751565,  yld:0.0000, mthDiv:0,     cumDist:908, janRet:908, capitalCall:0},
+  {name:'Clearlake Cap. VIII', vintage:2024,     ent:'LPE', group:'Long Term',  strat:'Private – Buyout',      prin:849744,    navDec:721344,  navJan:721344,  yld:0.0000, mthDiv:0,     ytdDiv:908, cumDist:908, janRet:908, capitalCall:0},
   {name:'Galvanize Innov. I', vintage:2022,      ent:'LPE', group:'Long Term',  strat:'Private – Climate VC',  prin:492413,    navDec:465412,  navJan:465412,  yld:0.0000, mthDiv:0,     cumDist:0, janRet:0, capitalCall:0},
   {name:'Thoma Bravo XVI-A', vintage:2025,       ent:'LPE', group:'Long Term',  strat:'Private – Buyout',      prin:471442,    navDec:459850,  navJan:459850,  yld:0.0000, mthDiv:0,     cumDist:0,     ytdDiv:0, janRet:0, capitalCall:0},
   {name:'CA Select Co-Inv. (LPE)', vintage:2024, ent:'LPE', group:'Long Term',  strat:'Private – Buyout',      prin:0,         navDec:0,       navJan:0,       yld:0.0000, mthDiv:0,     cumDist:0, janRet:0},
@@ -3388,7 +3633,7 @@ const returnData = [
        • cumDist = 0       (no distributions)
      All Time Return will always be 0. MTD = spend increase in the month.
   ─────────────────────────────────────────────────────────────────────── */
-  {name:'Odin Hills J8', vintage:2025,           ent:'KIL', group:'Real Estate',strat:'Real Asset – Property', prin:3095297,   navDec:3093622, navJan:3095297, yld:0.0000, mthDiv:0,     cumDist:0, janRet:0},
+  {name:'Odin Hills J8', vintage:2025,           ent:'KIL', group:'Real Estate',strat:'Real Asset – Property', prin:3093622,   navDec:3093622, navJan:3093622, yld:0.0000, mthDiv:0,     cumDist:0, janRet:0},
 
   // ZPP — Accumulation funds (no cash dividends; yield from NAV appreciation)
   {name:'PIMCO GIS Income', vintage:2025, ent:'ZPP', group:'Short Term', strat:'Public – Fixed Inc.', prin:2650000, navDec:2851377, navJan:2883347, yld:0.0881, mthDiv:0, ytdDiv:0, cumDist:0, janRet:15986},
@@ -3398,7 +3643,7 @@ const returnData = [
   {name:'KKR Income Trust', vintage:2025, ent:'ZPP', group:'Short Term', strat:'Private – Dir. Lend.', prin:6200000, navDec:6619711, navJan:6656718, yld:0.0737, mthDiv:0, ytdDiv:0, cumDist:0, janRet:55511},
   {name:'Blackstone BCRED', vintage:2025, ent:'ZPP', group:'Short Term', strat:'Private – Dir. Lend.', prin:6000000, navDec:6231117, navJan:6255042, yld:0.0425, mthDiv:0, ytdDiv:0, cumDist:0, janRet:24738},
   {name:'OTIC iCap', vintage:2025, ent:'ZPP', group:'Short Term', strat:'Private – Dir. Lend.', prin:6000000, navDec:6303517, navJan:6330305, yld:0.0551, mthDiv:0, ytdDiv:0, cumDist:0, janRet:38477},
-  {name:'BSP Structured Cr. V', vintage:2026, ent:'ZPP', group:'Long Term', strat:'Private – Credit', prin:530839, navDec:530839, navJan:530839, yld:0.0, mthDiv:0, ytdDiv:0, cumDist:0, janRet:0, capitalCall:0}
+  {name:'BSP Structured Cr. V', vintage:2026, ent:'ZPP', group:'Long Term', strat:'Private – Credit', prin:530839, navDec:577701, navJan:577701, yld:0.0, mthDiv:0, ytdDiv:0, cumDist:0, janRet:46862, capitalCall:0}
 ];
 const _origReturnData = returnData.slice();
 
@@ -3459,6 +3704,54 @@ function setReturnView(view) {
 }
 
 function renderReturnBreakdown(ent) {
+  // ── Dynamic period-aware headers ─────────────────────────────
+  const pSnap = periodSnapshots[activePeriod] || {};
+  const pLabel = pSnap.label || 'Cur';          // e.g. "Jan 2026"
+  const pMon   = pLabel.split(' ')[0];           // e.g. "Jan"
+  const prevMons = {'Jan':'Dec 2025','Feb':'Jan 2026','Mar':'Feb 2026'};
+  const prevMon  = prevMons[pMon] || 'Prev';
+
+  const isJan26  = activePeriod === '2026-01';
+  const isMar26  = activePeriod === '2026-03';
+
+  const ytdLabel    = isJan26 ? 'YTD Return (Jan)' : isMar26 ? 'YTD Return (Jan–Mar)' : 'YTD Return (Jan–Feb)';
+  const priorLabel  = isJan26 ? '—' : isMar26 ? 'Jan + Feb Return' : 'Jan Return';
+  const mthRetLabel = pMon + ' Return';
+  const mthDisLabel = pMon + ' Distribution';
+  const mthDisShort = pMon + ' Dis';
+  const mthRetShort = pMon + ' Ret';
+  const curNavLabel = pMon + ' NAV';
+
+  const set = (id, txt) => { const el = document.getElementById(id); if(el) el.textContent = txt; };
+  const setHtml = (id, html) => { const el = document.getElementById(id); if(el) el.innerHTML = html; };
+
+  set('bdgCardTag',   pLabel + ' · GGRP excluded from KPI totals');
+  set('bdgMtdLabel',  mthRetLabel);
+  setHtml('bdgMtdFormula', '(' + pMon + ' NAV − ' + prevMon + ' NAV)<br>+ ' + pMon + ' Distribution');
+  set('bdgYtdLabel',  ytdLabel);
+  setHtml('bdgYtdFormula', isJan26 ? 'Jan Return only' : isMar26 ? 'Jan + Feb + Mar Return' : 'Jan + Feb Return');
+  setHtml('bdgAtFormula',  '(' + pMon + ' NAV − Principal)<br>+ Cumulative Distributions');
+
+  set('bdgH1', prevMon + ' NAV');
+  set('bdgH2', curNavLabel);
+  set('bdgH3', mthDisLabel);
+  set('bdgH4', isJan26 ? '—' : priorLabel);
+  set('bdgH5', mthRetLabel);
+  set('bdgFH1', prevMon + ' NAV');
+  set('bdgFH2', curNavLabel);
+  set('bdgFH3', mthDisShort);
+  set('bdgFH4', isJan26 ? '—' : (isMar26 ? 'Jan+Feb' : 'Jan Ret'));
+  set('bdgFH5', mthRetShort);
+
+  const notesEl = document.getElementById('bdgNotes');
+  if (notesEl) notesEl.innerHTML = '<strong style="color:var(--ink)">Notes:</strong> '
+    + 'GGRP (Gunung Raja) is shown in the Return tab table under <em>Long Term – GGRP</em> but is <strong>excluded from the Overview KPI boxes</strong> for Monthly and YTD Return, as its NAV appreciation is treated separately from operating portfolio returns. '
+    + prevMon + ' NAV = prior month-end valuation. ' + pMon + ' NAV = ' + pLabel + ' valuation. '
+    + pMon + ' Distribution = income distributed during ' + pLabel + '. '
+    + 'MTD Return = (' + pMon + ' NAV − ' + prevMon + ' NAV − Capital Call) + ' + pMon + ' Distribution. '
+    + 'YTD = sum of all monthly returns Jan through ' + pMon + '.';
+  // ─────────────────────────────────────────────────────────────
+
   const data = isAll(ent) ? returnData.filter(d => ent === 'ALLX' ? d.ent !== 'ZPP' : true) : returnData.filter(d => d.ent === ent);
   const GGRP = 'Long Term - GGRP';
   const fmt2 = v => v.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
@@ -3478,7 +3771,7 @@ function renderReturnBreakdown(ent) {
     if (!grps[d.group]) grps[d.group] = {navDec:0,navJan:0,mthDiv:0,janRet:0,mtd:0,ytd:0,at:0};
     const g = grps[d.group];
      if (d.group === 'Real Estate') { g.isWIP = true; g.navDec += d.navDec; g.navJan += d.navJan; return; }
-    const mtd = (d.navJan - d.navDec) + d.mthDiv;
+    const mtd = (d.navJan - d.navDec - (d.capitalCall||0) + (d.recallableDist||0)) + d.mthDiv;
     const ytd = d.janRet + mtd;
     const at  = (d.navJan - d.prin) + (d.cumDist||0);
     g.navDec += d.navDec; g.navJan += d.navJan; g.mthDiv += d.mthDiv;
@@ -3551,7 +3844,7 @@ function renderReturnBreakdown(ent) {
     data.forEach(function(d, i) {
       if (d.group === GGRP || d.group === 'Real Estate') return;
        const isWIP = (d.group === 'Real Estate');
-      const mtd = isWIP ? 0 : (d.navJan - d.navDec) + d.mthDiv;
+      const mtd = isWIP ? 0 : (d.navJan - d.navDec - (d.capitalCall||0) + (d.recallableDist||0)) + d.mthDiv;
       const ytd = isWIP ? 0 : d.janRet + mtd;
       const ec  = entColor[d.ent] || '#2a4a7f';
       const bg  = i%2===0 ? 'var(--surface2)' : 'var(--surface)';
@@ -3625,8 +3918,9 @@ function renderReturnTable(ent) {
     const gCumDist  = rows.reduce((a,d)=>a+(d.cumDist||0),0);
     const gYtdDiv   = rows.reduce((a,d)=>a+(d.ytdDiv||0),0);
     const gJanRet   = rows.reduce((a,d)=>a+(d.janRet||0),0);
-    const gCapCall = rows.reduce((a,d)=>a+(d.capitalCall||0),0);
-    const gMtd    = (gNavJan - gNavDec - gCapCall) + gMthDiv;
+    const gCapCall    = rows.reduce((a,d)=>a+(d.capitalCall||0),0);
+    const gRecallDist = rows.reduce((a,d)=>a+(d.recallableDist||0),0);
+    const gMtd    = (gNavJan - gNavDec - gCapCall + gRecallDist) + gMthDiv;
     const gAt     = (gNavJan - gPrin) + gCumDist;
     const gYtdRet = gJanRet + gMtd;
     const gMtdPct = gNavDec > 0 ? gMtd/gNavDec : 0;
@@ -3668,7 +3962,7 @@ function renderReturnTable(ent) {
 
     const isWIP = (grp === 'Real Estate');
     rows.forEach(d => {
-      const mtd       = (d.navJan - d.navDec - (d.capitalCall||0)) + (d.mthDiv||0);
+      const mtd       = (d.navJan - d.navDec - (d.capitalCall||0) + (d.recallableDist||0)) + (d.mthDiv||0);
       const at        = (d.navJan - d.prin) + (d.cumDist||0);
       const ytdRet    = (d.janRet||0) + mtd;
       const mtdPct    = d.navDec > 0 ? mtd/d.navDec : 0;
@@ -3845,14 +4139,15 @@ function renderReturnTable(ent) {
   const mthYldEl=document.getElementById('kpiMthYield'), ytdYldEl=document.getElementById('kpiYtdYield');
   const fmtKpi = (abs,pct) => {
     const sign=abs>=0?'&#8593;':'&#8595;', cls=abs>=0?'up':'down';
-    return {val:`<span class="currency">${abs>=0?'+':'-'}$</span>${fmtM(Math.abs(abs))}`,
+    const col=abs>=0?'inherit':'#a03030';
+    return {val:`<span class="currency" style="color:${col}">${abs>=0?'+':'-'}$</span><span style="color:${col}">${fmtM(Math.abs(abs))}</span>`,
             sub:`<span class="${cls}">${sign} ${(Math.abs(pct)*100).toFixed(2)}%</span>`};
   };
   if(mtdEl){const rM=fmtKpi(kpiMtd,kpiMtdPct);mtdEl.querySelector('.kpi-value').innerHTML=rM.val;mtdEl.querySelector('.kpi-sub').innerHTML=rM.sub+' &nbsp;&middot;&nbsp; '+periodSnapshots[activePeriod].caption;}
   if(ytdEl){const rY=fmtKpi(kpiYtdRet,kpiYtdPct);ytdEl.querySelector('.kpi-value').innerHTML=rY.val;ytdEl.querySelector('.kpi-sub').innerHTML=rY.sub+' &nbsp;&middot;&nbsp; YTD '+periodSnapshots[activePeriod].caption;}
   if(atEl) {const rA=fmtKpi(kpiAt,kpiAtPct);atEl.querySelector('.kpi-value').innerHTML=rA.val;atEl.querySelector('.kpi-sub').innerHTML=rA.sub+' &nbsp;&middot;&nbsp; total gain since inception ÷ invested capital';}
   if(mthYldEl){mthYldEl.querySelector('.kpi-value').innerHTML=`<span class="currency" style="color:${blue}">+$</span><span style="color:${blue}">${fmtM(kpiMthDiv)}</span>`;mthYldEl.querySelector('.kpi-sub').innerHTML=`<span style="color:${blue}">${(kpiYldPct*100).toFixed(2)}% of prior NAV</span> &nbsp;&middot;&nbsp; Feb 2026`;}
-  if(ytdYldEl){ytdYldEl.querySelector('.kpi-value').innerHTML=`<span class="currency" style="color:${blue}">+$</span><span style="color:${blue}">${fmtM(kpiYtdDiv)}</span>`;ytdYldEl.querySelector('.kpi-sub').innerHTML=`<span style="color:${blue}">${(kpiYtdYPct*100).toFixed(2)}% of NAV</span> &nbsp;&middot;&nbsp; Jan + Feb 2026`;}
+  if(ytdYldEl){ytdYldEl.querySelector('.kpi-value').innerHTML=`<span class="currency" style="color:${blue}">+$</span><span style="color:${blue}">${fmtM(kpiYtdDiv)}</span>`;ytdYldEl.querySelector('.kpi-sub').innerHTML=`<span style="color:${blue}">${(kpiYtdYPct*100).toFixed(2)}% of NAV</span> &nbsp;&middot;&nbsp; Jan–Mar 2026`;}
 
   // Render breakdown panel
   renderReturnBreakdown(ent);
@@ -3880,40 +4175,79 @@ const capCallData = [
 ];
 
 // ── Feb 2026 snapshot — link live arrays ──────────────────────
-periodSnapshots['2026-02'].returnData = null
-periodSnapshots['2026-02'].expenses   = {ALL:811772,ALLX:811772,'5E':158922,ATH:512126,LPE:640724,ZPP:0,KIL:0};
+periodSnapshots['2026-02'].expenses   = {ALL:305457,ALLX:305457,'5E':158922,ATH:5661,LPE:640724,ZPP:0,KIL:0};
 periodSnapshots['2026-02'].settlement = 500000;
 periodSnapshots['2026-02'].nativeBalances = {bos:83700,dbs:496075,bcl:2245467,sgdRaw:934,sgd:730,ath:1511696,lpe:1682516,zpp:29133,total:6049316};
 periodSnapshots['2026-02'].cashMap     = {ALL:6049316,'5E':2825972,ATH:1511696,LPE:1682516,ZPP:29133,KIL:0};
-periodSnapshots['2026-02'].fcMap       = {ALL:6600886,'5E':215733,ATH:229574,LPE:6095608,ZPP:59972,KIL:0};
-periodSnapshots['2026-02'].sbMap       = {ALL:27548686,'5E':7252566,ATH:3455903,LPE:15240217,ZPP:1600000,KIL:0};
+periodSnapshots['2026-02'].fcMap       = {ALL:6507380,'5E':215733,ATH:210509,LPE:6095608,ZPP:-14470,KIL:0};
+periodSnapshots['2026-02'].sbMap       = {ALL:27474244,'5E':7252566,ATH:3455903,LPE:15240217,ZPP:1525558,KIL:0};
 periodSnapshots['2026-02'].totalAUM    = 56853127;
 periodSnapshots['2026-02'].fcCards     = {
-    fc5e:[{label:'Cash/FD',sign:'+',val:2825972},{label:'Standby Funds',sign:'+',val:7252566},{label:'Unfunded Commitments',sign:'−',val:9703883},{label:'Expenses Forecast',sign:'−',val:158922},{label:'Free Cash',sign:'=',val:215733}],
-    fcAth:[{label:'Cash/FD',sign:'+',val:1511696},{label:'Standby Funds',sign:'+',val:3455903},{label:'Unfunded (KT portion)',sign:'−',val:4225899},{label:'Expenses Forecast',sign:'−',val:12126},{label:'Settlement to 5E',sign:'−',val:500000},{label:'Free Cash',sign:'=',val:229574}],
-    fcLpe:[{label:'Cash/FD',sign:'+',val:1682516},{label:'Standby Funds',sign:'+',val:15240217},{label:'Unfunded Commitments',sign:'−',val:10186402},{label:'Expenses Forecast',sign:'−',val:640724},{label:'Free Cash',sign:'=',val:6095608}],
-    fcZpp:[{label:'Cash/FD',sign:'+',val:29133},{label:'Standby Funds',sign:'+',val:1600000},{label:'Unfunded Commitments',sign:'−',val:1569161},{label:'Free Cash',sign:'=',val:59972}]
+    fc5e:[{label:'Cash/FD',sign:'+',val:2825972},{label:'Standby Funds',sign:'+',val:7252566},{label:'Unfunded Commitments',sign:'−',val:10103883},{label:'Expenses Forecast',sign:'−',val:158922},{label:'Free Cash',sign:'=',val:215733}],
+    fcAth:[{label:'Cash/FD',sign:'+',val:1511696},{label:'Standby Funds',sign:'+',val:3455903},{label:'Unfunded (KT portion)',sign:'−',val:4244965},{label:'Expenses Forecast',sign:'−',val:12126},{label:'Settlement to 5E',sign:'−',val:500000},{label:'Free Cash',sign:'=',val:210509}],
+    fcLpe:[{label:'Cash/FD',sign:'+',val:1682516},{label:'Standby Funds',sign:'+',val:15271860},{label:'Unfunded Commitments',sign:'−',val:10186402},{label:'Expenses Forecast',sign:'−',val:640724},{label:'Free Cash',sign:'=',val:6095608}],
+    fcZpp:[{label:'Cash/FD',sign:'+',val:29133},{label:'Standby Funds',sign:'+',val:1525558},{label:'Unfunded Commitments',sign:'−',val:1569161},{label:'Free Cash',sign:'=',val:-14470}]
 };
 
 
 // ── EXPENSE FORECAST DATA (from 06. Expenses Forecast) ──
-const expForecastData = [
-  // 5E — [Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec]
-  {ent:'5E',  type:'Management Fee',   m:[0,0,34091,0,0,34091,0,0,34091,0,0,34091]},
-  {ent:'5E',  type:'Professional Fee', m:[0,0,1742,0,0,0,16801,0,0,0,0,3106]},
-  {ent:'5E',  type:'Membership',       m:[0,0,0,0,0,0,0,0,0,0,0,909]},
-  // ATH
-  {ent:'ATH', type:'Professional Fee', m:[0,0,6465,0,0,1330,0,0,0,0,0,0]},
-  {ent:'ATH', type:'Legal Fee',        m:[0,0,0,4331,0,0,0,0,0,0,0,0]},
-  // LPE
-  {ent:'LPE', type:'Management Fee',   m:[0,0,34091,0,0,34091,0,0,34091,0,0,34092]},
-  {ent:'LPE', type:'Legal Fee',        m:[3712,0,0,44924,0,0,0,17045,14394,5758,0,0]},
-  {ent:'LPE', type:'Professional Fee', m:[0,2500,227,0,0,227,0,0,227,0,0,2803]},
-  {ent:'LPE', type:'Insurance',        m:[0,0,0,0,0,0,411633,0,0,0,0,0]},
-  {ent:'LPE', type:'Membership',       m:[0,0,0,0,0,0,0,0,0,0,0,909]},
-  // ZPP
-  {ent:'ZPP', type:'Management Fee',    m:[0,0,0,0,0,0,0,0,0,0,0,0]},
-];
+// Period-aware expense forecast data — Jan/Feb/Mar versions from source
+const _expForecastByPeriod = {
+  '2026-01': [
+    // 5E
+    {ent:'5E',  type:'Management Fee',   m:[0,0,34091,0,0,34091,0,0,34091,0,0,34091]},
+    {ent:'5E',  type:'Professional Fee', m:[0,0,1742,0,0,0,16801,0,0,0,0,3106]},
+    {ent:'5E',  type:'Membership',       m:[0,0,0,0,0,0,0,0,0,0,0,909]},
+    // ATH — Jan forecast: Mar Professional Fee = 6,465
+    {ent:'ATH', type:'Professional Fee', m:[0,0,6465,0,0,1330,0,0,0,0,0,0]},
+    {ent:'ATH', type:'Legal Fee',        m:[0,0,0,4331,0,0,0,0,0,0,0,0]},
+    // LPE — Jan forecast: Jun Insurance = 411,633
+    {ent:'LPE', type:'Management Fee',   m:[0,0,34091,0,0,34091,0,0,34091,0,0,34092]},
+    {ent:'LPE', type:'Legal Fee',        m:[3712,0,0,44924,0,0,0,17045,14394,5758,0,0]},
+    {ent:'LPE', type:'Professional Fee', m:[0,2500,227,0,0,227,0,0,227,0,0,2803]},
+    {ent:'LPE', type:'Insurance',        m:[0,0,0,0,0,411633,0,0,0,0,0,0]},
+    {ent:'LPE', type:'Membership',       m:[0,0,0,0,0,0,0,0,0,0,0,909]},
+    // ZPP
+    {ent:'ZPP', type:'Management Fee',   m:[0,0,0,0,0,0,0,0,0,0,0,0]},
+  ],
+  '2026-02': [
+    // 5E — same as Jan
+    {ent:'5E',  type:'Management Fee',   m:[0,0,34091,0,0,34091,0,0,34091,0,0,34091]},
+    {ent:'5E',  type:'Professional Fee', m:[0,0,1742,0,0,0,16801,0,0,0,0,3106]},
+    {ent:'5E',  type:'Membership',       m:[0,0,0,0,0,0,0,0,0,0,0,909]},
+    // ATH — same as Jan
+    {ent:'ATH', type:'Professional Fee', m:[0,0,6465,0,0,1330,0,0,0,0,0,0]},
+    {ent:'ATH', type:'Legal Fee',        m:[0,0,0,4331,0,0,0,0,0,0,0,0]},
+    // LPE — same as Jan
+    {ent:'LPE', type:'Management Fee',   m:[0,0,34091,0,0,34091,0,0,34091,0,0,34092]},
+    {ent:'LPE', type:'Legal Fee',        m:[3712,0,0,44924,0,0,0,17045,14394,5758,0,0]},
+    {ent:'LPE', type:'Professional Fee', m:[0,2500,227,0,0,227,0,0,227,0,0,2803]},
+    {ent:'LPE', type:'Insurance',        m:[0,0,0,0,0,411633,0,0,0,0,0,0]},
+    {ent:'LPE', type:'Membership',       m:[0,0,0,0,0,0,0,0,0,0,0,909]},
+    // ZPP
+    {ent:'ZPP', type:'Management Fee',   m:[0,0,0,0,0,0,0,0,0,0,0,0]},
+  ],
+  '2026-03': [
+    // 5E — same as Jan/Feb
+    {ent:'5E',  type:'Management Fee',   m:[0,0,34091,0,0,34091,0,0,34091,0,0,34091]},
+    {ent:'5E',  type:'Professional Fee', m:[0,0,1742,0,0,0,16801,0,0,0,0,3106]},
+    {ent:'5E',  type:'Membership',       m:[0,0,0,0,0,0,0,0,0,0,0,909]},
+    // ATH — Mar forecast: Mar Professional Fee removed (0), total=5,661
+    {ent:'ATH', type:'Professional Fee', m:[0,0,0,0,0,1330,0,0,0,0,0,0]},
+    {ent:'ATH', type:'Legal Fee',        m:[0,0,0,4331,0,0,0,0,0,0,0,0]},
+    // LPE — Mar forecast: Jun Insurance = 466,000, total=695,091
+    {ent:'LPE', type:'Management Fee',   m:[0,0,34091,0,0,34091,0,0,34091,0,0,34092]},
+    {ent:'LPE', type:'Legal Fee',        m:[3712,0,0,44924,0,0,0,17045,14394,5758,0,0]},
+    {ent:'LPE', type:'Professional Fee', m:[0,2500,227,0,0,227,0,0,227,0,0,2803]},
+    {ent:'LPE', type:'Insurance',        m:[0,0,0,0,0,466000,0,0,0,0,0,0]},
+    {ent:'LPE', type:'Membership',       m:[0,0,0,0,0,0,0,0,0,0,0,909]},
+    // ZPP
+    {ent:'ZPP', type:'Management Fee',   m:[0,0,0,0,0,0,0,0,0,0,0,0]},
+  ],
+};
+function getExpForecastData() {
+  return _expForecastByPeriod[activePeriod] || _expForecastByPeriod['2026-03'];
+}
 
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
@@ -4013,7 +4347,7 @@ function renderDueAmountFiltered(ent) {
   }
 
   // ── Expenses ──
-  const exData = isAll(ent) ? expForecastData.filter(d => ent === 'ALLX' ? d.ent !== 'ZPP' : true) : expForecastData.filter(d => d.ent === ent);
+  const exData = isAll(ent) ? getExpForecastData().filter(d => ent === 'ALLX' ? d.ent !== 'ZPP' : true) : getExpForecastData().filter(d => d.ent === ent);
   const exTbody  = document.getElementById('expForecastTbody');
   const exFooter = document.getElementById('expForecastFooter');
 
